@@ -1,0 +1,38 @@
+<?php
+
+namespace Calliostro\LastFmClientBundle\DependencyInjection;
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+
+final class CalliostroLastFmClientExtension extends Extension
+{
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.xml');
+
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $container->getDefinition('calliostro_last_fm_client.auth')
+                  ->replaceArgument(0, $config['api_key'])
+                  ->replaceArgument(1, $config['secret'])
+                  ->replaceArgument(2, $config['token'])
+                  ->replaceArgument(3, $config['session']);
+
+        $container->getDefinition('calliostro_last_fm_client.client')
+            ->replaceArgument(0, new Reference('calliostro_last_fm_client.auth'));
+
+        $clientReference = new Reference('calliostro_last_fm_client.client');
+
+        foreach(['artist', 'album', 'track', 'user'] as $type) {
+            $container->getDefinition('calliostro_last_fm_client.'.$type)
+                      ->replaceArgument(0, $clientReference);
+
+        }
+    }
+}

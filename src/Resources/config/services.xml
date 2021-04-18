@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="calliostro_last_fm_client.auth" class="LastFmClient\Auth" public="true">
+            <factory class="Calliostro\LastFmClientBundle\AuthFactory" method="getAuth" />
+            <argument />
+            <argument />
+            <argument />
+            <argument />
+        </service>
+        <service id="calliostro_last_fm_client.client" class="LastFmClient\Client" public="true">
+            <factory class="Calliostro\LastFmClientBundle\ClientFactory" method="getClient" />
+            <argument />
+        </service>
+        <service id="calliostro_last_fm_client.album" class="LastFmClient\Service\Album" public="true">
+            <factory class="Calliostro\LastFmClientBundle\AlbumFactory" method="getAlbumService" />
+            <argument />
+        </service>
+        <service id="calliostro_last_fm_client.artist" class="LastFmClient\Service\Artist" public="true">
+            <factory class="Calliostro\LastFmClientBundle\ArtistFactory" method="getArtistService" />
+            <argument />
+        </service>
+        <service id="calliostro_last_fm_client.track" class="LastFmClient\Service\Track" public="true">
+            <factory class="Calliostro\LastFmClientBundle\TrackFactory" method="getTrackService" />
+            <argument />
+        </service>
+        <service id="calliostro_last_fm_client.user" class="LastFmClient\Service\User" public="true">
+            <factory class="Calliostro\LastFmClientBundle\UserFactory" method="getUserService" />
+            <argument />
+        </service>
+
+        <service id="LastFmClient\Auth" alias="calliostro_last_fm_client.auth" public="false" />
+        <service id="LastFmClient\Client" alias="calliostro_last_fm_client.client" public="false" />
+        <service id="LastFmClient\Service\Artist" alias="calliostro_last_fm_client.artist" public="false" />
+        <service id="LastFmClient\Service\Album" alias="calliostro_last_fm_client.album" public="false" />
+        <service id="LastFmClient\Service\Track" alias="calliostro_last_fm_client.track" public="false" />
+        <service id="LastFmClient\Service\User" alias="calliostro_last_fm_client.user" public="false" />
+    </services>
+</container>
