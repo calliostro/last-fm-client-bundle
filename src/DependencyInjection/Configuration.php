@@ -13,10 +13,24 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
-            ->scalarNode('api_key')->defaultValue('')->info('Your API key')->end()
-            ->scalarNode('secret')->defaultValue('')->info('Your secret')->end()
-            ->scalarNode('token')->defaultNull()->info('Optionally a fixed user token')->setDeprecated()->end()
-            ->scalarNode('session')->defaultNull()->info('Optionally a fixed user session')->setDeprecated()->end()
+                ->scalarNode('api_key')
+                    ->defaultValue('')
+                    ->info('Your API key')
+                ->end()
+                ->scalarNode('secret')
+                    ->defaultValue('')
+                    ->info('Your secret')
+                ->end()
+                ->scalarNode('token')
+                    ->defaultNull()
+                    ->info('Optionally a fixed user token')
+                    ->setDeprecated('calliostro/last-fm-client-bundle', '0.1.1', 'Will be removed in version 0.2.0')
+                ->end()
+                ->scalarNode('session')
+                    ->defaultNull()
+                    ->info('Optionally a fixed user session')
+                    ->setDeprecated('calliostro/last-fm-client-bundle', '0.1.1', 'Will be removed in version 0.2.0')
+                ->end()
             ->end()
         ;
 

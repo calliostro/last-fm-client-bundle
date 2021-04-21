@@ -68,10 +68,10 @@ calliostro_last_fm_client:
   secret:               '' # Required
 
   # Optionally a fixed user token
-  token:                null # Deprecated (The child node "token" at path "calliostro_last_fm_client" is deprecated.)
+  token:                null # Deprecated (Since calliostro/last-fm-client-bundle 0.1.1: Will be removed in version 0.2.0)
 
   # Optionally a fixed user session
-  session:              null # Deprecated (The child node "session" at path "calliostro_last_fm_client" is deprecated.)
+  session:              null # Deprecated (Since calliostro/last-fm-client-bundle 0.1.1: Will be removed in version 0.2.0)
 ```
 
 At the moment the so-called scrobble function of Last.fm is only possible for a fixed user (`token` and `session`
