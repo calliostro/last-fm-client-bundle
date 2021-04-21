@@ -13,8 +13,7 @@ Installation
 ------------
 
 Make sure Composer is installed globally, as explained in the
-[installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
+[installation chapter](https://getcomposer.org/doc/00-intro.md) of the Composer documentation.
 
 ### Applications that use Symfony Flex
 
@@ -53,24 +52,30 @@ return [
 Configuration
 -------------
 
-For configuration create a new `config/packages/calliostro_discogs.yaml` file. The default values are:
+First, you must register your application at https://www.last.fm/api/account/create to obtain the
+`api_key` and `secret`.
+
+For configuration create a new `config/packages/calliostro_last_fm_client.yaml` file. Here is an example:
 
 ```yaml
 # config/packages/calliostro_last_fm_client.yaml
 calliostro_last_fm_client:
 
   # Your API key
-  api_key: ~
+  api_key:              '' # Required
 
   # Your secret
-  secret: ~
+  secret:               '' # Required
 
   # Optionally a fixed user token
-  token: null
+  token:                null # Deprecated (The child node "token" at path "calliostro_last_fm_client" is deprecated.)
 
   # Optionally a fixed user session
-  session: null
+  session:              null # Deprecated (The child node "session" at path "calliostro_last_fm_client" is deprecated.)
 ```
+
+At the moment the so-called scrobble function of Last.fm is only possible for a fixed user (`token` and `session`
+setting). For the next version a more flexible solution will be developed.
 
 
 Usage
@@ -98,12 +103,12 @@ class SomeController
 }
 ```
 
-The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). A documentation can
-be found there.
-
 
 Documentation
 -------------
+
+The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). A documentation can
+be found there.
 
 For more documentation, see the [Last.fm API documentation](http://www.last.fm/api).
 
