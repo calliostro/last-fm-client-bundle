@@ -10,6 +10,9 @@
             <argument />
             <argument />
             <argument />
+        </service>
+        <service id="calliostro_last_fm_client.auth_service" class="LastFmClient\Service\Auth" public="true">
+            <factory class="Calliostro\LastFmClientBundle\AuthServiceFactory" method="getAuthService" />
             <argument />
         </service>
         <service id="calliostro_last_fm_client.client" class="LastFmClient\Client" public="true">
@@ -34,6 +37,7 @@
         </service>
 
         <service id="LastFmClient\Auth" alias="calliostro_last_fm_client.auth" public="false" />
+        <service id="LastFmClient\Service\Auth" alias="calliostro_last_fm_client.auth_service" public="false" />
         <service id="LastFmClient\Client" alias="calliostro_last_fm_client.client" public="false" />
         <service id="LastFmClient\Service\Artist" alias="calliostro_last_fm_client.artist" public="false" />
         <service id="LastFmClient\Service\Album" alias="calliostro_last_fm_client.album" public="false" />

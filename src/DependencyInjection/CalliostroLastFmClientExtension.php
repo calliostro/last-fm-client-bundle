@@ -19,15 +19,17 @@ final class CalliostroLastFmClientExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->getDefinition('calliostro_last_fm_client.auth')
-                  ->replaceArgument(0, $config['api_key'])
-                  ->replaceArgument(1, $config['secret'])
-                  ->replaceArgument(2, $config['token'])
-                  ->replaceArgument(3, $config['session']);
+                  ->replaceArgument(0, $config['api_key'] ?? null)
+                  ->replaceArgument(1, $config['secret'] ?? null)
+                  ->replaceArgument(2, $config['session'] ?? null);
 
         $container->getDefinition('calliostro_last_fm_client.client')
             ->replaceArgument(0, new Reference('calliostro_last_fm_client.auth'));
 
         $clientReference = new Reference('calliostro_last_fm_client.client');
+
+        $container->getDefinition('calliostro_last_fm_client.auth_service')
+            ->replaceArgument(0, $clientReference);
 
         foreach(['artist', 'album', 'track', 'user'] as $type) {
             $container->getDefinition('calliostro_last_fm_client.'.$type)

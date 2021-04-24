@@ -67,16 +67,9 @@ calliostro_last_fm_client:
   # Your secret
   secret:               '' # Required
 
-  # Optionally a fixed user token
-  token:                null # Deprecated (Since calliostro/last-fm-client-bundle 0.1.1: Will be removed in version 0.2.0)
-
-  # Optionally a fixed user session
-  session:              null # Deprecated (Since calliostro/last-fm-client-bundle 0.1.1: Will be removed in version 0.2.0)
+  # Optionally a fixed user session (e.g. for scrobbling)
+  session:              ~
 ```
-
-At the moment the so-called scrobble function of Last.fm is only possible for a fixed user (`token` and `session`
-setting). For the next version a more flexible solution will be developed.
-
 
 Usage
 -----
@@ -84,15 +77,19 @@ Usage
 This bundle provides multiple service for communication with Last.fm, which you can autowire by using the corresponding
 type-hint.
 
+### Client Credentials
+
+This is the simpler option if no user-related endpoints are required.
+
 ```php
 // src/Controller/SomeController.php
 
-use LastFmClient\Service;
+use LastFmClient\Service\Artist;
 // ...
 
 class SomeController
 {
-    public function index(Service\Artist $artistService)
+    public function index(Artist $artistService)
     {
         $artist = $artistService->getInfo('Cher');
 
@@ -103,6 +100,61 @@ class SomeController
 }
 ```
 
+### Authorization Code
+
+If you want to trade on behalf of a Last.fm user (e.g. for scrobbling), you must have a session token. If you want to
+use the API only for a specific user, you can set the `session` value in the configuration. These session tokens do not 
+expire.
+
+You can also request a session token from Last.fm for the current user. First, you need an authorization token. Here is
+an example:
+
+```php
+// src/Controller/SomeController.php
+
+namespace App\Controller;
+
+use LastFmClient;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+class SomeController extends AbstractController
+{
+    /**
+     * @Route("/redirect")
+     */
+    public function redirectToLastFm(LastFmClient\Client $client)
+    {
+        $callbackUrl = $this->generateUrl('some_callback', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $authUrl = $client->getAuthUrl($callbackUrl);
+
+        return $this->redirect($authUrl);
+    }
+
+    /**
+     * @Route("/callback", name="some_callback")
+     */
+    public function callbackFromLastFm(
+        Request $request,
+        LastFmClient\Auth $auth,
+        LastFmClient\Service\Auth $authService
+    ) {
+        $token = $request->query->get('token');
+        $auth->setToken($token);
+        $sessionData = $authService->getSession()->getData();
+
+        // You can store $sessionKey somewhere for later reuse
+        $sessionKey = $sessionData['session']['key'];
+
+        $auth->setSession($sessionKey);
+
+        // Now you can use, for example, the LastFmClient\Service\Track service for scrobbling
+        // ...
+    }
+}
+```
 
 Documentation
 -------------
