@@ -1,12 +1,12 @@
 Last.fm Client Bundle
 =====================
 
-[![Build Status](https://api.travis-ci.com/calliostro/last-fm-client-bundle.svg)](https://www.travis-ci.com/github/calliostro/last-fm-client-bundle)
+[![Build Status](https://app.travis-ci.com/calliostro/last-fm-client-bundle.svg?branch=main)](https://www.travis-ci.com/github/calliostro/last-fm-client-bundle)
 [![Version](https://poser.pugx.org/calliostro/last-fm-client-bundle/version)](//packagist.org/packages/calliostro/last-fm-client-bundle)
 [![License](https://poser.pugx.org/calliostro/last-fm-client-bundle/license)](//packagist.org/packages/calliostro/last-fm-client-bundle)
 
 This bundle provides a simple integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient)
-into Symfony 5.
+into Symfony 5 or Symfony 6.
 
 
 Installation

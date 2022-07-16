@@ -36,7 +36,7 @@ class CalliostroLastFmClientTestingKernel extends Kernel
         parent::__construct('test', true);
     }
 
-    public function registerBundles()
+    public function registerBundles(): array
     {
         return [
             new CalliostroLastFmClientBundle(),
@@ -50,7 +50,7 @@ class CalliostroLastFmClientTestingKernel extends Kernel
         });
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getProjectDir() . '/var/cache/' . $this->environment . '/' . spl_object_hash($this);
     }
