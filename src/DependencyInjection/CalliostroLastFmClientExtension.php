@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 final class CalliostroLastFmClientExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
@@ -34,7 +34,6 @@ final class CalliostroLastFmClientExtension extends Extension
         foreach(['artist', 'album', 'track', 'user'] as $type) {
             $container->getDefinition('calliostro_last_fm_client.'.$type)
                       ->replaceArgument(0, $clientReference);
-
         }
     }
 }

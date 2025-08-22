@@ -1,14 +1,16 @@
 {
     "name": "calliostro/last-fm-client-bundle",
-    "description": "Last.fm API client for Symfony 5 or Symfony 6",
+    "description": "Last.fm API client for Symfony 6.4, Symfony 7 and Symfony 8",
     "type": "symfony-bundle",
+    "keywords": ["last.fm", "api", "symfony", "bundle"],
+    "homepage": "https://github.com/calliostro/last-fm-client-bundle",
     "license": "MIT",
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^8.1",
         "snapshotpl/last-fm-client": "^1.0",
-        "symfony/config": "^5.0 || ^6.0",
-        "symfony/dependency-injection": "^5.0 || ^6.0",
-        "symfony/http-kernel": "^5.0 || ^6.0"
+        "symfony/config": "^6.4|^7.0|^8.0",
+        "symfony/dependency-injection": "^6.4|^7.0|^8.0",
+        "symfony/http-kernel": "^6.4|^7.0|^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -16,11 +18,20 @@
         }
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^5.0 || ^6.0"
+        "symfony/phpunit-bridge": "^6.4|^7.0|^8.0"
     },
     "autoload-dev": {
         "psr-4": {
             "Calliostro\\LastFmClientBundle\\Tests\\": "tests/"
         }
-    }
+    },
+    "scripts": {
+        "test": "vendor/bin/simple-phpunit"
+    },
+    "authors": [
+        {
+            "name": "calliostro",
+            "email": "calliostro@gmail.com"
+        }
+    ]
 }

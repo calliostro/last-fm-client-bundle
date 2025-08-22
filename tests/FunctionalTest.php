@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 final class FunctionalTest extends TestCase
 {
-    public function testServiceWiring()
+    public function testServiceWiring(): void
     {
         $kernel = new CalliostroLastFmClientTestingKernel([
             'api_key' => 'some API key',
@@ -27,12 +27,9 @@ final class FunctionalTest extends TestCase
 
 class CalliostroLastFmClientTestingKernel extends Kernel
 {
-    private $calliostroLastFmClientConfig;
-
-    public function __construct(array $calliostroLastFmClientConfig = [])
-    {
-        $this->calliostroLastFmClientConfig = $calliostroLastFmClientConfig;
-
+    public function __construct(
+        private readonly array $calliostroLastFmClientConfig = []
+    ) {
         parent::__construct('test', true);
     }
 
@@ -43,9 +40,9 @@ class CalliostroLastFmClientTestingKernel extends Kernel
         ];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(function (ContainerBuilder $container): void {
             $container->loadFromExtension('calliostro_last_fm_client', $this->calliostroLastFmClientConfig);
         });
     }
