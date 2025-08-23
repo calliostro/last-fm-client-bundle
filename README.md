@@ -1,6 +1,6 @@
 # 🎵 Last.fm Client Bundle
 
-[![Build Status](https://app.travis-ci.com/calliostro/last-fm-client-bundle.svg?branch=main)](https://www.travis-ci.com/github/calliostro/last-fm-client-bundle)
+[![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml)
 [![Version](https://poser.pugx.org/calliostro/last-fm-client-bundle/version)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![License](https://poser.pugx.org/calliostro/last-fm-client-bundle/license)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 
