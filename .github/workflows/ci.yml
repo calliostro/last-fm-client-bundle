@@ -55,24 +55,31 @@ jobs:
             symfony-version: '^7.3'
             allowed-to-fail: false
 
-          # Future releases (November 2025) - PHP 8.5 + Symfony 8.0
+          # Future-ready: Symfony 8.0 (beta/dev) - November 2024
+          - php: '8.3'
+            symfony-version: '^8.0'
+            stability: 'dev'
+            allowed-to-fail: true
+          - php: '8.4'
+            symfony-version: '^8.0'
+            stability: 'dev'
+            allowed-to-fail: true
+
+          # Future-ready: PHP 8.5 (alpha/dev) - when available
           - php: '8.5'
             symfony-version: '^8.0'
             stability: 'dev'
             allowed-to-fail: true
 
-          # Additional future compatibility tests
-          - php: '8.4'
-            symfony-version: '^8.0'
+          # General development stability tests
+          - php: '8.3'
             stability: 'dev'
             allowed-to-fail: true
-
-          # Development stability test
           - php: '8.4'
             stability: 'dev'
             allowed-to-fail: true
 
-    name: "PHP ${{ matrix.php }}${{ matrix.symfony-version && format(' | Symfony {0}', matrix.symfony-version) || '' }}${{ matrix.composer-flags && format(' | {0}', matrix.composer-flags) || '' }}${{ matrix.stability && format(' | {0}', matrix.stability) || '' }}"
+    name: "PHP ${{ matrix.php }}${{ matrix.symfony-version && format(' | Symfony {0}', matrix.symfony-version) || '' }}${{ matrix.stability && format(' | {0}', matrix.stability) || '' }}"
 
     continue-on-error: ${{ matrix.allowed-to-fail }}
 
@@ -118,10 +125,16 @@ jobs:
         run: rm -f composer.lock
 
       - name: Install dependencies
-        run: composer update ${{ matrix.composer-flags }} --prefer-dist --no-interaction --no-progress
+        run: composer update --prefer-dist --no-interaction --no-progress
 
-      - name: Validate composer.json
-        run: composer validate --strict --no-check-lock
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Run code style check
+        run: composer cs
+
+      - name: Run static analysis
+        run: composer analyse
 
       - name: Run tests
         run: ./vendor/bin/simple-phpunit -v
