@@ -5,6 +5,7 @@ namespace Calliostro\LastFmClientBundle\Tests\DependencyInjection;
 use Calliostro\LastFmClientBundle\DependencyInjection\CalliostroLastFmClientExtension;
 use Calliostro\LastFmClientBundle\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -37,15 +38,31 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals(['User-Agent' => 'TestApp/1.0'], $config['http_client_options']['headers']);
     }
 
-    public function testConfigurationDefaults(): void
+    public function testConfigurationRequiredFields(): void
     {
         $configuration = new Configuration();
         $processor = new Processor();
 
-        $config = $processor->processConfiguration($configuration, []);
+        $this->expectException(InvalidConfigurationException::class);
+        
+        // This should throw an exception because api_key and secret are required
+        $processor->processConfiguration($configuration, []);
+    }
 
-        $this->assertEquals('', $config['api_key']);
-        $this->assertEquals('', $config['secret']);
+    public function testConfigurationMinimalValid(): void
+    {
+        $configuration = new Configuration();
+        $processor = new Processor();
+
+        $config = $processor->processConfiguration($configuration, [
+            [
+                'api_key' => 'test_key',
+                'secret' => 'test_secret',
+            ]
+        ]);
+
+        $this->assertEquals('test_key', $config['api_key']);
+        $this->assertEquals('test_secret', $config['secret']);
         $this->assertArrayNotHasKey('session', $config);
         $this->assertEquals([], $config['http_client_options']);
     }

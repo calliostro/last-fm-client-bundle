@@ -25,24 +25,25 @@ Configure the bundle in `config/packages/calliostro_last_fm_client.yaml`:
 
 ```yaml
 calliostro_last_fm_client:
+    # Get your API credentials from https://www.last.fm/api/account/create
     api_key: '%env(LASTFM_API_KEY)%'
     secret: '%env(LASTFM_SECRET)%'
     
     # Optional: pre-configured session key for user authentication
-    session: '%env(LASTFM_SESSION_KEY)%'
+    # session: '%env(LASTFM_SESSION_KEY)%'
     
     # Optional: HTTP client options
-    http_client_options:
-        timeout: 30
-        headers:
-            'User-Agent': 'MyApp/1.0'
+    # http_client_options:
+    #     timeout: 30
+    #     headers:
+    #         'User-Agent': 'MyApp/1.0'
 ```
 
-**API Key & Secret:** You need to [register your application](https://www.last.fm/api/account/create) at Last.fm to get your API key and secret. All API calls require a valid API key.
+**API Key & Secret:** You need to [register your application](https://www.last.fm/api/account/create) at Last.fm to get your API key and secret. Both values are **required** and cannot be empty.
 
 **Session Key:** This version supports only a pre-configured user session for scrobbling and user-specific actions. For read-only operations (artist info, charts, search), you're all set with just an API key and secret. For full OAuth workflow support, use the standalone [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client) library.
 
-**User-Agent:** By default, the client uses `LastFmClient/1.0 (+https://github.com/calliostro/lastfm-client)` as User-Agent.
+**User-Agent:** By default, the client uses `LastFmClient/1.0 (+https://github.com/calliostro/lastfm-client)` as User-Agent. You can override this in the `http_client_options` if needed.
 
 ## 🚀 Quick Start
 
