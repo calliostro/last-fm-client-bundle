@@ -28,14 +28,14 @@ This release modernizes the Last.fm Client Bundle to support current PHP and Sym
 
 ### Enhanced PHP Support
 
-- **Full PHP 8.1-8.5 support** - Including preparation for PHP 8.5
-- Modern PHP features utilized in codebase and examples
+- **Full PHP 8.1 – 8.5 support** — Including preparation for PHP 8.5
+- Modern PHP features are used in codebase and examples
 
 ### Modern Symfony Support
 
-- **Symfony 6.4 LTS support** - Full compatibility with current LTS version
-- **Symfony 7.x support** - Ready for all Symfony 7 releases including 7.4 LTS
-- **Symfony 8.x support** - Future-proof with upcoming Symfony 8 releases
+- **Symfony 6.4 LTS support** — Full compatibility with the current LTS version
+- **Symfony 7.x support** — Ready for all Symfony 7 releases including 7.4 LTS
+- **Symfony 8.x support** — Future-proof with upcoming Symfony 8 releases
 
 ---
 
@@ -43,28 +43,28 @@ This release modernizes the Last.fm Client Bundle to support current PHP and Sym
 
 ### Development & Testing
 
-- **Modernized CI/CD pipeline** - Comprehensive test matrix covering all supported PHP and Symfony versions
-- **Updated PHPUnit configuration** - Using modern PHPUnit 9.6 features and schema
-- **Improved test reliability** - Test suite runs with randomized execution order
-- **Added composer scripts** - `composer test` command for easy testing
+- **Modernized CI/CD pipeline** — Comprehensive test matrix covering all supported PHP and Symfony versions
+- **Updated PHPUnit configuration** — Using modern PHPUnit 9.6 features and schema
+- **Improved test reliability** — Test suite runs with randomized execution order
+- **Added composer scripts** — `composer test` command for easy testing
 
 ### Code Quality
 
-- **Enhanced type safety** - Added return types and improved type hints
-- **Modern PHP patterns** - Constructor property promotion in test code
-- **Better deprecation handling** - Improved configuration for handling Symfony deprecations
+- **Enhanced type safety** — Added return types and improved type hints
+- **Modern PHP patterns** — Constructor property promotion in test code
+- **Better deprecation handling** — Improved configuration for handling Symfony deprecations
 
 ### Documentation
 
-- **Enhanced README** - Improved structure with emojis and clearer instructions
-- **Modern code examples** - PHP 8.1+ attributes instead of annotations
-- **Better configuration examples** - Including environment variable security tips
-- **Comprehensive usage examples** - Realistic controller examples following best practices
+- **Enhanced README** — Improved structure with emojis and clearer instructions
+- **Modern code examples** — PHP 8.1+ attributes instead of annotations
+- **Better configuration examples** — Including environment variable security tips
+- **Comprehensive usage examples** — Realistic controller examples following best practices
 
 ### Development Environment
 
-- **Cleaner .gitignore** - Refined patterns relevant to the project
-- **Better caching support** - Added modern PHPUnit cache patterns
+- **Cleaner .gitignore** — Refined patterns relevant to the project
+- **Better caching support** — Added modern PHPUnit cache patterns
 
 ---
 
@@ -72,15 +72,15 @@ This release modernizes the Last.fm Client Bundle to support current PHP and Sym
 
 ### Dependencies
 
-- Dependencies updated to latest stable versions compatible with new requirements
-- Symfony components updated to support 6.4|7.0|8.0 constraint pattern
+- Dependencies updated to the latest stable versions are compatible with new requirements
+- Symfony components updated to support the 6.4|7.0|8.0 constraint pattern
 - PHPUnit Bridge updated for modern Symfony versions
 
 ### Configuration
 
-- **Modern PHPUnit schema** - Updated to PHPUnit 9.6 XSD
-- **Improved coverage reporting** - Modern `<coverage>` element usage
-- **Enhanced CI configuration** - Separate test matrices for different PHP/Symfony combinations
+- **Modern PHPUnit schema** — Updated to PHPUnit 9.6 XSD
+- **Improved coverage reporting** — Modern `<coverage>` element usage
+- **Enhanced CI configuration** — Separate test matrices for different PHP/Symfony combinations
 
 ---
 
@@ -88,17 +88,17 @@ This release modernizes the Last.fm Client Bundle to support current PHP and Sym
 
 ### README Improvements
 
-- **Modern PHP examples** - Updated code samples using PHP 8.1+ features
-- **Symfony best practices** - Controller examples using attributes and proper DI
-- **Security recommendations** - Environment variable handling tips
-- **Clear installation guides** - Separate sections for Flex and non-Flex applications
+- **Modern PHP examples** — Updated code samples using PHP 8.1+ features
+- **Symfony best practices** — Controller examples using attributes and proper DI
+- **Security recommendations** — Environment variable handling tips
+- **Clear installation guides** — Separate sections for Flex and non-Flex applications
 
 ### Code Examples
 
-- **PHP 8 Attributes** - Replaced `@Route` annotations with `#[Route]` attributes
-- **Type declarations** - Added proper return types and parameter types
-- **Modern patterns** - Constructor property promotion examples
-- **Error handling** - Improved exception handling in examples
+- **PHP 8 Attributes** — Replaced `@Route` annotations with `#[Route]` attributes
+- **Type declarations** — Added proper return types and parameter types
+- **Modern patterns** — Constructor property promotion examples
+- **Error handling** — Improved exception handling in examples
 
 ---
 
@@ -200,7 +200,7 @@ If you see deprecation warnings, they are likely from your application code, not
 
 - Check the updated [README.md](README.md) for modern usage examples
 - Open an issue on [GitHub](https://github.com/calliostro/last-fm-client-bundle/issues)
-- The bundle's API remains the same - only requirements have changed
+- The bundle's API remains the same — only requirements have changed
 
 ---
 

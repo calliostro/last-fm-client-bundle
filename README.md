@@ -1,8 +1,10 @@
 # 🎵 Last.fm Client Bundle
 
-[![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml)
-[![Version](https://poser.pugx.org/calliostro/last-fm-client-bundle/version)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
-[![License](https://poser.pugx.org/calliostro/last-fm-client-bundle/license)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![Latest Stable Version](https://img.shields.io/packagist/v/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![License](https://img.shields.io/packagist/l/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
+[![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions)
 
 > 🚀 **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8!**
 
@@ -71,7 +73,7 @@ calliostro_last_fm_client:
     # Your secret
     secret: '' # Required
 
-    # Optionally a fixed user session (e.g. for scrobbling)
+    # Optionally a fixed user session (e.g., for scrobbling)
     session: ~
 ```
 
@@ -85,7 +87,7 @@ calliostro_last_fm_client:
 
 ## 🎬 Usage
 
-This bundle provides multiple service for communication with Last.fm, which you can autowire by using the corresponding
+This bundle provides multiple services for communication with Last.fm, which you can autowire by using the corresponding
 type-hint.
 
 ### 🔑 Client Credentials
@@ -120,7 +122,7 @@ class SomeController
 
 ### 🧑‍💻 Authorization Code
 
-If you want to trade on behalf of a Last.fm user (e.g. for scrobbling), you must have a session token. If you want to
+If you want to trade on behalf of a Last.fm user (e.g., for scrobbling), you must have a session token. If you want to
 use the API only for a specific user, you can set the `session` value in the configuration. These session tokens do not
 expire.
 
@@ -204,7 +206,7 @@ class LastFmController extends AbstractController
 
 ## 📚 Documentation
 
-The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). A documentation can
+The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). Documentation can
 be found there.
 
 For more documentation, see the [Last.fm API documentation](http://www.last.fm/api).
