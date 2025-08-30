@@ -2,20 +2,21 @@
 
 namespace Calliostro\LastFmClientBundle\Tests;
 
-use Calliostro\LastFmClientBundle\CalliostroLastFmClientBundle;
 use LastFmClient\Client;
+use LastFmClient\Service\Album;
+use LastFmClient\Service\Artist;
+use LastFmClient\Service\Auth as AuthService;
+use LastFmClient\Service\Track;
+use LastFmClient\Service\User;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Kernel;
 
 final class FunctionalTest extends TestCase
 {
     public function testServiceWiring(): void
     {
         $kernel = new CalliostroLastFmClientTestingKernel([
-            'api_key' => 'some API key',
-            'secret' => 'some secret',
+            'api_key' => 'test_api_key',
+            'secret' => 'test_secret',
         ]);
         $kernel->boot();
         $container = $kernel->getContainer();
@@ -23,32 +24,40 @@ final class FunctionalTest extends TestCase
         $client = $container->get('calliostro_last_fm_client.client');
         $this->assertInstanceOf(Client::class, $client);
     }
-}
 
-class CalliostroLastFmClientTestingKernel extends Kernel
-{
-    public function __construct(
-        private readonly array $calliostroLastFmClientConfig = []
-    ) {
-        parent::__construct('test', true);
+    public function testAllServicesAreAvailable(): void
+    {
+        $kernel = new CalliostroLastFmClientTestingKernel([
+            'api_key' => 'test_api_key',
+            'secret' => 'test_secret',
+        ]);
+        $kernel->boot();
+        $container = $kernel->getContainer();
+
+        // Test all main services
+        $this->assertInstanceOf(Client::class, $container->get('calliostro_last_fm_client.client'));
+        $this->assertInstanceOf(Album::class, $container->get('calliostro_last_fm_client.album'));
+        $this->assertInstanceOf(Artist::class, $container->get('calliostro_last_fm_client.artist'));
+        $this->assertInstanceOf(AuthService::class, $container->get('calliostro_last_fm_client.auth_service'));
+        $this->assertInstanceOf(Track::class, $container->get('calliostro_last_fm_client.track'));
+        $this->assertInstanceOf(User::class, $container->get('calliostro_last_fm_client.user'));
     }
 
-    public function registerBundles(): array
+    public function testConfigurationProcessing(): void
     {
-        return [
-            new CalliostroLastFmClientBundle(),
-        ];
-    }
+        $kernel = new CalliostroLastFmClientTestingKernel([
+            'api_key' => 'test_api_key',
+            'secret' => 'test_secret',
+            'session' => 'test_session',
+        ]);
+        $kernel->boot();
+        $container = $kernel->getContainer();
 
-    public function registerContainerConfiguration(LoaderInterface $loader): void
-    {
-        $loader->load(function (ContainerBuilder $container): void {
-            $container->loadFromExtension('calliostro_last_fm_client', $this->calliostroLastFmClientConfig);
-        });
-    }
+        // Test that services are properly configured
+        $auth = $container->get('calliostro_last_fm_client.auth');
+        $this->assertNotNull($auth);
 
-    public function getCacheDir(): string
-    {
-        return $this->getProjectDir() . '/var/cache/' . $this->environment . '/' . spl_object_hash($this);
+        $client = $container->get('calliostro_last_fm_client.client');
+        $this->assertInstanceOf(Client::class, $client);
     }
 }

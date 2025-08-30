@@ -12,3 +12,10 @@ composer.lock
 /phpunit.xml
 /tests/cache/
 ###< symfony/phpunit-bridge ###
+
+# Coverage reports
+coverage/
+coverage-html/
+
+# Environment files
+.env
