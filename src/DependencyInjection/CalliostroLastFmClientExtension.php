@@ -12,10 +12,10 @@ final class CalliostroLastFmClientExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
-        $configuration = $this->getConfiguration($configs, $container);
+        $configuration = $this->getConfiguration($configs, $container) ?? new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->getDefinition('calliostro_last_fm_client.auth')
@@ -31,8 +31,8 @@ final class CalliostroLastFmClientExtension extends Extension
         $container->getDefinition('calliostro_last_fm_client.auth_service')
             ->replaceArgument(0, $clientReference);
 
-        foreach(['artist', 'album', 'track', 'user'] as $type) {
-            $container->getDefinition('calliostro_last_fm_client.'.$type)
+        foreach (['artist', 'album', 'track', 'user'] as $type) {
+            $container->getDefinition('calliostro_last_fm_client.' . $type)
                       ->replaceArgument(0, $clientReference);
         }
     }

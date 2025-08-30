@@ -1,10 +1,24 @@
-# 🎵 Last.fm Client Bundle
+# 🎵 Last.fm Client Bundle (Legacy 0.x Branch)
 
-[![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml)
-[![Version](https://poser.pugx.org/calliostro/last-fm-client-bundle/version)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
-[![License](https://poser.pugx.org/calliostro/last-fm-client-bundle/license)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![Latest Stable Version](https://img.shields.io/packagist/v/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![License](https://img.shields.io/packagist/l/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
+[![CI (Legacy 0.x)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg?branch=legacy/0.x)](https://github.com/calliostro/last-fm-client-bundle/actions)
+[![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/branch/legacy/0.x/graph/badge.svg)](https://codecov.io/gh/calliostro/last-fm-client-bundle/tree/legacy/0.x)
 
 > 🚀 **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8!**
+>
+> ⚠️ **This is the Legacy 0.x Branch**  
+> This branch supports `snapshotpl/last-fm-client` and provides continued maintenance for existing projects.
+>
+> 🔗 **Branch Information:**
+>
+> - **Current Branch:** `legacy/0.x` - For existing projects using `^0.4`
+> - **Main Branch:** `main` - For new projects using `^1.0` with modern `calliostro/lastfm-client`
+>
+> **For new projects**: Use version `^1.0` from the [`main` branch](https://github.com/calliostro/last-fm-client-bundle/tree/main).  
+> **For existing projects**: Use `^0.4` from this branch for continued maintenance without breaking changes.
 
 ## ✨ Features
 
@@ -56,7 +70,7 @@ return [
 
 ## ⚙️ Configuration
 
-First, you must register your application at https://www.last.fm/api/account/create to obtain the
+First, you must register your application at <https://www.last.fm/api/account/create> to obtain the
 `api_key` and `secret`.
 
 For configuration create a new `config/packages/calliostro_last_fm_client.yaml` file. Here is an example:
@@ -71,11 +85,12 @@ calliostro_last_fm_client:
     # Your secret
     secret: '' # Required
 
-    # Optionally a fixed user session (e.g. for scrobbling)
+    # Optionally a fixed user session (e.g., for scrobbling)
     session: ~
 ```
 
 > **💡 Tip**: Store your credentials securely using environment variables:
+>
 > ```yaml
 > calliostro_last_fm_client:
 >     api_key: '%env(LASTFM_API_KEY)%'
@@ -84,7 +99,7 @@ calliostro_last_fm_client:
 
 ## 🎬 Usage
 
-This bundle provides multiple service for communication with Last.fm, which you can autowire by using the corresponding
+This bundle provides multiple services for communication with Last.fm, which you can autowire by using the corresponding
 type-hint.
 
 ### 🔑 Client Credentials
@@ -119,7 +134,7 @@ class SomeController
 
 ### 🧑‍💻 Authorization Code
 
-If you want to trade on behalf of a Last.fm user (e.g. for scrobbling), you must have a session token. If you want to
+If you want to trade on behalf of a Last.fm user (e.g., for scrobbling), you must have a session token. If you want to
 use the API only for a specific user, you can set the `session` value in the configuration. These session tokens do not
 expire.
 
@@ -203,7 +218,7 @@ class LastFmController extends AbstractController
 
 ## 📚 Documentation
 
-The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). A documentation can
+The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). Documentation can
 be found there.
 
 For more documentation, see the [Last.fm API documentation](http://www.last.fm/api).
@@ -220,9 +235,11 @@ For more documentation, see the [Last.fm API documentation](http://www.last.fm/a
 Implemented a missing feature? You can request it. And creating a pull request is an even better way to get things done.
 
 ## 🏁 Quick Start
+
 1. Install the bundle with Composer 📦
 2. Configure your Last.fm credentials 🔑
 3. Autowire the service and start using the API! 🚀
 
 ## 💬 Support
+
 For questions or help, feel free to open an issue or reach out! 😊
