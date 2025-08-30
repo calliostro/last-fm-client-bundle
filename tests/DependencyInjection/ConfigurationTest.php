@@ -22,6 +22,10 @@ final class ConfigurationTest extends TestCase
                     'api_key' => 'test_key',
                     'secret' => 'test_secret',
                     'session' => 'test_session',
+                    'http_client_options' => [
+                        'timeout' => 30,
+                        'headers' => ['User-Agent' => 'TestApp/1.0']
+                    ]
                 ]
             ]
         );
@@ -29,6 +33,8 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals('test_key', $config['api_key']);
         $this->assertEquals('test_secret', $config['secret']);
         $this->assertEquals('test_session', $config['session']);
+        $this->assertEquals(30, $config['http_client_options']['timeout']);
+        $this->assertEquals(['User-Agent' => 'TestApp/1.0'], $config['http_client_options']['headers']);
     }
 
     public function testConfigurationDefaults(): void
@@ -41,6 +47,7 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals('', $config['api_key']);
         $this->assertEquals('', $config['secret']);
         $this->assertArrayNotHasKey('session', $config);
+        $this->assertEquals([], $config['http_client_options']);
     }
 
     public function testExtensionLoadsServices(): void
@@ -55,13 +62,7 @@ final class ConfigurationTest extends TestCase
             ]
         ], $container);
 
-        // Check that all services are defined
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.auth'));
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.client'));
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.album'));
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.artist'));
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.auth_service'));
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.track'));
-        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.user'));
+        // Check that the main service is defined
+        $this->assertTrue($container->hasDefinition('calliostro_last_fm_client.api_client'));
     }
 }

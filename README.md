@@ -1,4 +1,4 @@
-# 🎵 Last.fm Client Bundle (Legacy 0.x Branch)
+# ⚡ Last.fm Client Bundle for Symfony – Ultra-Lightweight
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
@@ -7,239 +7,235 @@
 [![CI (Legacy 0.x)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg?branch=legacy/0.x)](https://github.com/calliostro/last-fm-client-bundle/actions)
 [![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/branch/legacy/0.x/graph/badge.svg)](https://codecov.io/gh/calliostro/last-fm-client-bundle/tree/legacy/0.x)
 
-> 🚀 **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8!**
->
-> ⚠️ **This is the Legacy 0.x Branch**  
-> This branch supports `snapshotpl/last-fm-client` and provides continued maintenance for existing projects.
->
-> 🔗 **Branch Information:**
->
-> - **Current Branch:** `legacy/0.x` - For existing projects using `^0.4`
-> - **Main Branch:** `main` - For new projects using `^1.0` with modern `calliostro/lastfm-client`
->
-> **For new projects**: Use version `^1.0` from the [`main` branch](https://github.com/calliostro/last-fm-client-bundle/tree/main).  
-> **For existing projects**: Use `^0.4` from this branch for continued maintenance without breaking changes.
+> **🚀 SYMFONY INTEGRATION!** Seamless autowiring for the most lightweight Last.fm API client for PHP. Zero bloats, maximum performance.
 
-## ✨ Features
-
-- Simple integration with Symfony 6.4, 7 & 8
-- Supports Client API access & User authentication flows
-- Autowire Last.fm API services
-- Easy configuration
-- Comprehensive API coverage for Last.fm
+Symfony bundle that integrates the **ultra-minimalist** [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client) into your Symfony application. Built with modern PHP 8.1+ features, dependency injection, and powered by Guzzle.
 
 ## 📦 Installation
 
-Make sure Composer is installed globally, as explained in the
-[installation chapter](https://getcomposer.org/doc/00-intro.md) of the Composer documentation.
+Install via Composer:
 
-### ⚡ Applications that use Symfony Flex
-
-Open a command console, enter your project directory and execute:
-
-```console
+```bash
 composer require calliostro/last-fm-client-bundle
 ```
-
-### 🛠️ Applications that don't use Symfony Flex
-
-#### Step 1: Download the Bundle
-
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
-
-```console
-composer require calliostro/last-fm-client-bundle
-```
-
-#### Step 2: Enable the Bundle
-
-Then, enable the bundle by adding it to the list of registered bundles
-in the `config/bundles.php` file of your project:
-
-```php
-// config/bundles.php
-
-return [
-    // ...
-    Calliostro\LastFmClientBundle\CalliostroLastFmClientBundle::class => ['all' => true],
-];
-```
-
-> **Supports Symfony 6.4 (LTS), 7.x and 8.x! 🎉**
 
 ## ⚙️ Configuration
 
-First, you must register your application at <https://www.last.fm/api/account/create> to obtain the
-`api_key` and `secret`.
-
-For configuration create a new `config/packages/calliostro_last_fm_client.yaml` file. Here is an example:
+Configure the bundle in `config/packages/calliostro_last_fm_client.yaml`:
 
 ```yaml
-# config/packages/calliostro_last_fm_client.yaml
 calliostro_last_fm_client:
-
-    # Your API key
-    api_key: '' # Required
-
-    # Your secret
-    secret: '' # Required
-
-    # Optionally a fixed user session (e.g., for scrobbling)
-    session: ~
+    api_key: '%env(LASTFM_API_KEY)%'
+    secret: '%env(LASTFM_SECRET)%'
+    
+    # Optional: pre-configured session key for user authentication
+    session: '%env(LASTFM_SESSION_KEY)%'
+    
+    # Optional: HTTP client options
+    http_client_options:
+        timeout: 30
+        headers:
+            'User-Agent': 'MyApp/1.0'
 ```
 
-> **💡 Tip**: Store your credentials securely using environment variables:
->
-> ```yaml
-> calliostro_last_fm_client:
->     api_key: '%env(LASTFM_API_KEY)%'
->     secret: '%env(LASTFM_SECRET)%'
-> ```
+**API Key & Secret:** You need to [register your application](https://www.last.fm/api/account/create) at Last.fm to get your API key and secret. All API calls require a valid API key.
 
-## 🎬 Usage
+**Session Key:** This version supports only a pre-configured user session for scrobbling and user-specific actions. For read-only operations (artist info, charts, search), you're all set with just an API key and secret. For full OAuth workflow support, use the standalone [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client) library.
 
-This bundle provides multiple services for communication with Last.fm, which you can autowire by using the corresponding
-type-hint.
+**User-Agent:** By default, the client uses `LastFmClient/1.0 (+https://github.com/calliostro/lastfm-client)` as User-Agent.
 
-### 🔑 Client Credentials
+## 🚀 Quick Start
 
-This is the simpler option if no user-related endpoints are required.
+### Basic Usage
 
 ```php
-// src/Controller/SomeController.php
-
-use LastFmClient\Service\Artist;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-// ...
-
-class SomeController
-{
-    #[Route('/artist/{name}', name: 'artist_info')]
-    public function index(string $name, Artist $artistService): JsonResponse
-    {
-        try {
-            $artist = $artistService->getInfo($name);
-            $artistData = $artist->getData();
-
-            return new JsonResponse($artistData);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Artist not found'], Response::HTTP_NOT_FOUND);
-        }
-    }
-}
-```
-
-### 🧑‍💻 Authorization Code
-
-If you want to trade on behalf of a Last.fm user (e.g., for scrobbling), you must have a session token. If you want to
-use the API only for a specific user, you can set the `session` value in the configuration. These session tokens do not
-expire.
-
-You can also request a session token from Last.fm for the current user. First, you need an authorization token. Here is
-an example:
-
-```php
-// src/Controller/LastFmController.php
+<?php
+// src/Controller/MusicController.php
 
 namespace App\Controller;
 
-use LastFmClient\Client;
-use LastFmClient\Auth;
-use LastFmClient\Service\Auth as AuthService;
-use LastFmClient\Service\Track;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Calliostro\LastFm\LastFmApiClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
-class LastFmController extends AbstractController
+class MusicController
 {
-    public function __construct(
-        private readonly Client $client,
-        private readonly Auth $auth,
-        private readonly AuthService $authService,
-        private readonly Track $trackService
-    ) {}
-
-    #[Route('/', name: 'home')]
-    public function index(): Response
+    public function artistInfo(string $name, LastFmApiClient $client): JsonResponse
     {
-        return new Response('
-            <h1>Last.fm API Demo</h1>
-            <p>Welcome to the Last.fm Client Bundle demonstration!</p>
-            <p><a href="/authorize">Click here to authorize with Last.fm</a></p>
-        ', 200, ['Content-Type' => 'text/html']);
-    }
+        $artist = $client->artistGetInfo(['artist' => $name]);
+        $topTracks = $client->artistGetTopTracks(['artist' => $name, 'limit' => 5]);
 
-    #[Route('/authorize', name: 'authorize')]
-    public function authorize(): Response
-    {
-        $callbackUrl = $this->generateUrl('lastfm_callback', [], UrlGeneratorInterface::ABSOLUTE_URL);
-        $authUrl = $this->client->getAuthUrl($callbackUrl);
-
-        return $this->redirect($authUrl);
-    }
-
-    #[Route('/callback', name: 'lastfm_callback')]
-    public function callback(Request $request): Response
-    {
-        $token = $request->query->get('token');
-        
-        if (!$token) {
-            return $this->redirectToRoute('authorize');
-        }
-
-        $this->auth->setToken($token);
-        $sessionData = $this->authService->getSession()->getData();
-
-        // Store session key for future use
-        $sessionKey = $sessionData['session']['key'];
-        $this->auth->setSession($sessionKey);
-
-        // Example: Scrobble a track
-        $this->trackService->scrobble('Pink Floyd', 'Wish You Were Here', new \DateTime());
-
-        return new Response('
-            <h1>Last.fm Authorization Successful!</h1>
-            <p>Welcome, ' . htmlspecialchars($sessionData['session']['name'] ?? 'Last.fm User') . '!</p>
-            <p>Track scrobbled successfully!</p>
-            <pre>' . htmlspecialchars(var_export($sessionData, true)) . '</pre>
-            <p><a href="/">Back to Home</a></p>
-        ', 200, ['Content-Type' => 'text/html']);
+        return new JsonResponse([
+            'artist' => $artist['artist']['name'],
+            'topTracks' => $topTracks['toptracks']['track']
+        ]);
     }
 }
 ```
 
-> **⚠️ Note**: This example assumes proper service configuration. The Last.fm API services are automatically autowired when properly configured.
+### Scrobbling and User Actions
 
-## 📚 Documentation
+```php
+// Requires pre-configured session key
+$client->trackUpdateNowPlaying([
+    'artist' => 'Linkin Park',
+    'track' => 'In the End'
+]);
 
-The services are provided by [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient). Documentation can
-be found there.
+$client->trackScrobble([
+    'artist' => 'Linkin Park',
+    'track' => 'In the End',
+    'timestamp' => time()
+]);
 
-For more documentation, see the [Last.fm API documentation](http://www.last.fm/api).
+$client->trackLove(['artist' => 'Adele', 'track' => 'Hello']);
+```
 
-## ⚡ Supported Versions
+### Discovery and Charts
 
-- **PHP 8.1 - 8.5**
-- **Symfony 6.4 (LTS)**
-- **Symfony 7.x**
-- **Symfony 8.x**
+```php
+$similar = $client->artistGetSimilar(['artist' => 'Imagine Dragons']);
+$topTracks = $client->artistGetTopTracks(['artist' => 'Adele']);
+$recentTracks = $client->userGetRecentTracks(['user' => 'username']);
+$topArtists = $client->chartGetTopArtists(['limit' => 10]);
+$rockTracks = $client->tagGetTopTracks(['tag' => 'rock']);
+```
+
+## ✨ Key Features
+
+- **Ultra-Lightweight** – Minimal Symfony integration with zero bloat for the ultra-lightweight Last.fm client
+- **Complete API Coverage** – All 60+ Last.fm API endpoints supported
+- **Direct API Calls** – `$client->trackGetInfo()` maps to `track.getInfo`, no abstractions
+- **Type Safe + IDE Support** – Full PHP 8.1+ types, PHPStan Level 8, method autocomplete
+- **Symfony Native** – Seamless autowiring with Symfony 6.4, 7.x & 8.x
+- **Future-Ready** – PHP 8.5 and Symfony 8.0 compatible (beta/dev testing)
+- **Well Tested** – 100% test coverage, PSR-12 compliant
+- **Configuration-Based Auth** – Pre-configured session key support
+
+## 🎵 All Last.fm API Methods as Direct Calls
+
+- **Track Methods** – trackGetInfo(), trackScrobble(), trackUpdateNowPlaying(), trackLove(), trackUnlove()
+- **Artist Methods** – artistGetInfo(), artistGetTopTracks(), artistGetSimilar(), artistSearch()
+- **User Methods** – userGetInfo(), userGetRecentTracks(), userGetLovedTracks(), userGetTopArtists()
+- **Chart Methods** – chartGetTopArtists(), chartGetTopTracks()
+- **Album Methods** – albumGetInfo(), albumSearch()
+- **Tag Methods** – tagGetInfo(), tagGetTopTracks(), tagGetTopTags()
+- **Auth Methods** – authGetToken(), authGetSession()
+- **Geo Methods** – geoGetTopArtists(), geoGetTopTracks()
+- **Library Methods** – libraryGetArtists()
+
+*All 60+ Last.fm API endpoints are supported with clean documentation — see [Last.fm API Documentation](https://www.last.fm/api) for complete method reference*
+
+## 📋 Requirements
+
+- php ^8.1
+- symfony ^6.4|^7.0|^8.0
+- calliostro/lastfm-client
+
+## 🔧 Service Integration
+
+```php
+<?php
+// src/Service/MusicService.php
+
+namespace App\Service;
+
+use Calliostro\LastFm\LastFmApiClient;
+
+class MusicService
+{
+    public function __construct(
+        private readonly LastFmApiClient $client
+    ) {}
+
+    public function scrobbleTrack(string $artist, string $track): void
+    {
+        // Requires pre-configured session key
+        $this->client->trackScrobble([
+            'artist' => $artist,
+            'track' => $track,
+            'timestamp' => time()
+        ]);
+    }
+
+    public function updateNowPlaying(string $artist, string $track): void
+    {
+        $this->client->trackUpdateNowPlaying([
+            'artist' => $artist,
+            'track' => $track
+        ]);
+    }
+}
+```
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+composer test
+```
+
+Run static analysis:
+
+```bash
+composer analyse
+```
+
+Check code style:
+
+```bash
+composer cs
+```
+
+## 📖 API Documentation Reference
+
+For complete API documentation including all available parameters, visit the [Last.fm API Documentation](https://www.last.fm/api).
+
+### Popular Methods
+
+#### Track Methods
+
+- `trackGetInfo($params)` – Get track information
+- `trackSearch($params)` – Search for tracks
+- `trackScrobble($params)` – Scrobble a track (auth required)
+- `trackUpdateNowPlaying($params)` – Update now playing (auth required)
+- `trackLove($params)` – Love a track (auth required)
+- `trackUnlove($params)` – Remove love from track (auth required)
+
+#### Artist Methods
+
+- `artistGetInfo($params)` – Get artist information
+- `artistGetTopTracks($params)` – Get artist's top tracks
+- `artistGetSimilar($params)` – Get similar artists
+- `artistSearch($params)` – Search for artists
+
+#### User Methods
+
+- `userGetInfo($params)` – Get user profile information
+- `userGetRecentTracks($params)` – Get user's recent tracks
+- `userGetLovedTracks($params)` – Get user's loved tracks
+- `userGetTopArtists($params)` – Get user's top artists
 
 ## 🤝 Contributing
 
-Implemented a missing feature? You can request it. And creating a pull request is an even better way to get things done.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 🏁 Quick Start
+Please ensure your code follows PSR-12 standards and includes tests.
 
-1. Install the bundle with Composer 📦
-2. Configure your Last.fm credentials 🔑
-3. Autowire the service and start using the API! 🚀
+## 📄 License
 
-## 💬 Support
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
-For questions or help, feel free to open an issue or reach out! 😊
+## 🙏 Acknowledgments
+
+- [Last.fm](https://last.fm) for providing the excellent music data API
+- [Symfony](https://symfony.com) for the robust framework and DI container
+- [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client) for the ultra-lightweight client library
+
+---
+
+> **⭐ Star this repo** if you find it useful! It helps others discover this lightweight solution.

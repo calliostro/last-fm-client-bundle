@@ -16,6 +16,3 @@ composer.lock
 # Coverage reports
 coverage/
 coverage-html/
-
-# Environment files
-.env

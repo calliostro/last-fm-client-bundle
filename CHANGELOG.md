@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] – 2025-08-29
+
+### Added
+
+- **Complete rewrite**: Modern Symfony bundle with `calliostro/lastfm-client`
+- **Symfony Flex integration**: Automatic setup with `composer require`
+- **Simplified configuration**: Environment-based setup
+
+### Breaking Changes
+
+- **New dependency**: Migrated from `snapshotpl/last-fm-client` to `calliostro/lastfm-client`
+- **For legacy support**: Use version `^0.4` (legacy-0.x branch)
+
+---
+
 ## [0.4.2] – 2025-08-29
 
 ### Maintenance

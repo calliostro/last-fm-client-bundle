@@ -1,0 +1,20 @@
+# Configuration for Calliostro Last.fm Client Bundle
+# For more information about this bundle, visit:
+# https://github.com/calliostro/last-fm-client-bundle
+
+calliostro_last_fm_client:
+    # Your Last.fm API key - get it from https://www.last.fm/api/account/create
+    api_key: '%env(LASTFM_API_KEY)%'
+
+    # Your Last.fm API secret - get it from https://www.last.fm/api/account/create
+    secret: '%env(LASTFM_SECRET)%'
+
+    # Optional: Pre-configured session key for user authentication
+    # Required for scrobbling and user-specific actions
+    # session: '%env(LASTFM_SESSION_KEY)%'
+
+    # Optional: Custom HTTP client options
+    # http_client_options:
+    #     timeout: 30
+    #     headers:
+    #         'User-Agent': 'MyApp/1.0'

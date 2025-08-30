@@ -18,14 +18,21 @@ final class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('api_key')
                     ->defaultValue('')
-                    ->info('Your API key')
                 ->end()
                 ->scalarNode('secret')
                     ->defaultValue('')
-                    ->info('Your secret')
                 ->end()
                 ->scalarNode('session')
-                    ->info('Optionally a fixed user session (e.g. for scrobbling)')
+                    ->info('Optional: pre-configured session key for user authentication')
+                ->end()
+                ->arrayNode('http_client_options')
+                    ->info(
+                        "Optional: HTTP client options\n" .
+                        "See: https://docs.guzzlephp.org/en/stable/request-options.html"
+                    )
+                    ->defaultValue([])
+                    ->useAttributeAsKey('name')
+                    ->variablePrototype()->end()
                 ->end()
             ->end()
         ;
