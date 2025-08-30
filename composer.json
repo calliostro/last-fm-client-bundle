@@ -1,6 +1,6 @@
 {
     "name": "calliostro/last-fm-client-bundle",
-    "description": "Symfony bundle for the Last.fm API — scrobbling, music data & integration made easy",
+    "description": "Symfony bundle for the Last.fm API - scrobbling, music data & integration made easy",
     "type": "symfony-bundle",
     "keywords": [
         "symfony-bundle",
@@ -35,7 +35,9 @@
         }
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0|^8.0"
+        "symfony/phpunit-bridge": "^6.4|^7.0|^8.0",
+        "squizlabs/php_codesniffer": "^3.7",
+        "phpstan/phpstan": "^1.10"
     },
     "autoload-dev": {
         "psr-4": {
@@ -43,6 +45,9 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/simple-phpunit"
+        "test": "vendor/bin/simple-phpunit",
+        "cs": "phpcs --standard=PSR12 src/",
+        "cs-fix": "phpcbf --standard=PSR12 src/",
+        "analyse": "phpstan analyse src/ --level=8"
     }
 }
