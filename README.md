@@ -56,7 +56,7 @@ return [
 
 ## ⚙️ Configuration
 
-First, you must register your application at https://www.last.fm/api/account/create to obtain the
+First, you must register your application at <https://www.last.fm/api/account/create> to obtain the
 `api_key` and `secret`.
 
 For configuration create a new `config/packages/calliostro_last_fm_client.yaml` file. Here is an example:
@@ -76,6 +76,7 @@ calliostro_last_fm_client:
 ```
 
 > **💡 Tip**: Store your credentials securely using environment variables:
+>
 > ```yaml
 > calliostro_last_fm_client:
 >     api_key: '%env(LASTFM_API_KEY)%'
@@ -220,9 +221,11 @@ For more documentation, see the [Last.fm API documentation](http://www.last.fm/a
 Implemented a missing feature? You can request it. And creating a pull request is an even better way to get things done.
 
 ## 🏁 Quick Start
+
 1. Install the bundle with Composer 📦
 2. Configure your Last.fm credentials 🔑
 3. Autowire the service and start using the API! 🚀
 
 ## 💬 Support
+
 For questions or help, feel free to open an issue or reach out! 😊
