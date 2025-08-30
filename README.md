@@ -1,18 +1,24 @@
-# 🎵 Last.fm Client Bundle
+# 🎵 Last.fm Client Bundle (Legacy 0.x Branch)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![License](https://img.shields.io/packagist/l/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
-[![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/calliostro/last-fm-client-bundle)
+[![CI (Legacy 0.x)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg?branch=legacy/0.x)](https://github.com/calliostro/last-fm-client-bundle/actions)
+[![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/branch/legacy/0.x/graph/badge.svg)](https://codecov.io/gh/calliostro/last-fm-client-bundle/tree/legacy/0.x)
 
 > 🚀 **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8!**
 >
-> ⚠️ **Legacy Version 0.4.x**  
-> This is the legacy branch supporting `snapshotpl/last-fm-client`.  
-> **For new projects**: Use version `^1.0` with modern `calliostro/lastfm-client` from the `main` branch.  
-> **For existing projects**: Use `^0.4` for continued maintenance without breaking changes.
+> ⚠️ **This is the Legacy 0.x Branch**  
+> This branch supports `snapshotpl/last-fm-client` and provides continued maintenance for existing projects.
+>
+> 🔗 **Branch Information:**
+>
+> - **Current Branch:** `legacy/0.x` - For existing projects using `^0.4`
+> - **Main Branch:** `main` - For new projects using `^1.0` with modern `calliostro/lastfm-client`
+>
+> **For new projects**: Use version `^1.0` from the [`main` branch](https://github.com/calliostro/last-fm-client-bundle/tree/main).  
+> **For existing projects**: Use `^0.4` from this branch for continued maintenance without breaking changes.
 
 ## ✨ Features
 
