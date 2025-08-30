@@ -20,61 +20,66 @@ use PHPUnit\Framework\TestCase;
 
 final class FactoryTest extends TestCase
 {
+    private function createTestAuth(?string $apiKey = 'test_api_key', ?string $secret = 'test_secret', ?string $session = null): Auth
+    {
+        return AuthFactory::getAuth($apiKey, $secret, $session);
+    }
+
+    private function createTestClient(?string $session = null): Client
+    {
+        $auth = $this->createTestAuth(session: $session);
+        return ClientFactory::getClient($auth);
+    }
+
     public function testAuthFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', 'test_session');
+        $auth = $this->createTestAuth();
         $this->assertInstanceOf(Auth::class, $auth);
     }
 
     public function testAuthFactoryWithNullValues(): void
     {
-        $auth = AuthFactory::getAuth(null, null, null);
+        $auth = $this->createTestAuth(null, null, null);
         $this->assertInstanceOf(Auth::class, $auth);
     }
 
     public function testClientFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', null);
-        $client = ClientFactory::getClient($auth);
+        $client = $this->createTestClient();
         $this->assertInstanceOf(Client::class, $client);
     }
 
     public function testAlbumFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', null);
-        $client = ClientFactory::getClient($auth);
+        $client = $this->createTestClient();
         $albumService = AlbumFactory::getAlbumService($client);
         $this->assertInstanceOf(Album::class, $albumService);
     }
 
     public function testArtistFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', null);
-        $client = ClientFactory::getClient($auth);
+        $client = $this->createTestClient();
         $artistService = ArtistFactory::getArtistService($client);
         $this->assertInstanceOf(Artist::class, $artistService);
     }
 
     public function testAuthServiceFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', null);
-        $client = ClientFactory::getClient($auth);
+        $client = $this->createTestClient();
         $authService = AuthServiceFactory::getAuthService($client);
         $this->assertInstanceOf(AuthService::class, $authService);
     }
 
     public function testTrackFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', null);
-        $client = ClientFactory::getClient($auth);
+        $client = $this->createTestClient();
         $trackService = TrackFactory::getTrackService($client);
         $this->assertInstanceOf(Track::class, $trackService);
     }
 
     public function testUserFactory(): void
     {
-        $auth = AuthFactory::getAuth('test_api_key', 'test_secret', null);
-        $client = ClientFactory::getClient($auth);
+        $client = $this->createTestClient();
         $userService = UserFactory::getUserService($client);
         $this->assertInstanceOf(User::class, $userService);
     }
