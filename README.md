@@ -8,6 +8,11 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/calliostro/last-fm-client-bundle)
 
 > 🚀 **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8!**
+>
+> ⚠️ **Legacy Version 0.4.x**  
+> This is the legacy branch supporting `snapshotpl/last-fm-client`.  
+> **For new projects**: Use version `^1.0` with modern `calliostro/lastfm-client` from the `main` branch.  
+> **For existing projects**: Use `^0.4` for continued maintenance without breaking changes.
 
 ## ✨ Features
 
