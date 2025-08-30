@@ -13,7 +13,7 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('calliostro_last_fm_client');
         $rootNode = $treeBuilder->getRootNode();
 
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore-next-line: Suppress type error for $rootNode chaining (Symfony config definition)
         $rootNode
             ->children()
                 ->scalarNode('api_key')
