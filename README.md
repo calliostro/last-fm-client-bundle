@@ -4,8 +4,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![License](https://img.shields.io/packagist/l/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
-[![CI (Legacy 0.x)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg?branch=legacy/0.x)](https://github.com/calliostro/last-fm-client-bundle/actions)
-[![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/branch/legacy/0.x/graph/badge.svg)](https://codecov.io/gh/calliostro/last-fm-client-bundle/tree/legacy/0.x)
+[![CI (Main)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/calliostro/last-fm-client-bundle/actions)
+[![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/graph/badge.svg?branch=main)](https://codecov.io/gh/calliostro/last-fm-client-bundle?branch=main)
 
 > **🚀 SYMFONY INTEGRATION!** Seamless autowiring for the most lightweight Last.fm API client for PHP. Zero bloats, maximum performance.
 
@@ -103,7 +103,7 @@ $rockTracks = $client->tagGetTopTracks(['tag' => 'rock']);
 
 ## ✨ Key Features
 
-- **Ultra-Lightweight** – Minimal Symfony integration with zero bloat for the ultra-lightweight Last.fm client
+- **Ultra-Lightweight** – Minimal Symfony integration with zero bloats for the ultra-lightweight Last.fm client
 - **Complete API Coverage** – All 60+ Last.fm API endpoints supported
 - **Direct API Calls** – `$client->trackGetInfo()` maps to `track.getInfo`, no abstractions
 - **Type Safe + IDE Support** – Full PHP 8.1+ types, PHPStan Level 8, method autocomplete
