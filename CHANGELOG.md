@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] – 2025-09-06
+
+### Documentation
+
+- **Fixed coverage badge link**: Corrected codecov.io URL for proper branch coverage display
+- **Enhanced v1.0.0 migration guidance**: Added prominent notice about modern v1.0.0 availability
+- **Improved legacy branch information**: Clarified final legacy version status
+
+### Notes
+
+- **Final legacy version**: Last update for `snapshotpl/last-fm-client` support
+- **Legacy maintenance**: This branch is now in maintenance mode only
+- **For new projects**: Use version `^1.0.0` with modern `calliostro/lastfm-client` from main branch
+- **For existing projects**: This version provides stable legacy support
+
+---
+
 ## [0.4.2] – 2025-08-29
 
 ### Maintenance

@@ -5,20 +5,12 @@
 [![License](https://img.shields.io/packagist/l/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
 [![CI (Legacy 0.x)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg?branch=legacy/0.x)](https://github.com/calliostro/last-fm-client-bundle/actions)
-[![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/branch/legacy/0.x/graph/badge.svg)](https://codecov.io/gh/calliostro/last-fm-client-bundle/tree/legacy/0.x)
+[![codecov](https://codecov.io/gh/calliostro/last-fm-client-bundle/graph/badge.svg?branch=legacy%2F0.x)](https://codecov.io/gh/calliostro/last-fm-client-bundle?branch=legacy%2F0.x)
 
-> 🚀 **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8!**
+> **Easy integration of [snapshotpl/LastFmClient](https://github.com/snapshotpl/LastFmClient) into Symfony 6.4, 7 & 8**
 >
-> ⚠️ **This is the Legacy 0.x Branch**  
-> This branch supports `snapshotpl/last-fm-client` and provides continued maintenance for existing projects.
->
-> 🔗 **Branch Information:**
->
-> - **Current Branch:** `legacy/0.x` - For existing projects using `^0.4`
-> - **Main Branch:** `main` - For new projects using `^1.0` with modern `calliostro/lastfm-client`
->
-> **For new projects**: Use version `^1.0` from the [`main` branch](https://github.com/calliostro/last-fm-client-bundle/tree/main).  
-> **For existing projects**: Use `^0.4` from this branch for continued maintenance without breaking changes.
+> **Legacy Branch:** This is the final version (v0.4.3) for existing projects.  
+> **New projects:** Use [v1.0.0](https://github.com/calliostro/last-fm-client-bundle) with modern [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client).
 
 ## ✨ Features
 
