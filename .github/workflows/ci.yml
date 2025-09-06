@@ -2,15 +2,17 @@ name: CI
 
 on:
   push:
-    branches: 
-      - main
+    branches:
+      - 'main'
+      - 'legacy/**'     # All legacy branches
       - 'feature/**'    # All feature branches
       - 'hotfix/**'     # All hotfix branches
       - 'release/**'    # All release branches
   pull_request:
-    branches: 
-      - main
-  workflow_dispatch:  # Allows manual triggering via GitHub UI
+    branches:
+      - 'main'
+      - 'legacy/**'     # PRs to legacy branches
+  workflow_dispatch:    # Allows manual triggering via GitHub UI
 
 jobs:
   test:

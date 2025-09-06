@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] – 2025-09-06
+
+### Added
+
+- **Complete rewrite**: Modern Symfony bundle with `calliostro/lastfm-client`
+- **Enhanced configuration validation**: API key and secret validation
+- **Improved service architecture**: Modern dependency injection patterns
+- **Symfony Flex integration**: Automatic setup with `composer require`
+
+### Breaking Changes
+
+- **New dependency**: Migrated from `snapshotpl/last-fm-client` to `calliostro/lastfm-client`
+- **Configuration changes**: Updated service configuration structure
+- **Legacy support**: Version `^0.4.3` available on legacy/0.x branch
+
+### Migration
+
+- **From v0.4.x**: Complete rewrite requires migration (see README)
+- **Legacy branch**: `legacy/0.x` maintained with the final version v0.4.3
+
+---
+
+## [0.4.3] – 2025-09-06 (Legacy Branch)
+
+### Documentation
+
+- **Fixed coverage badge link**: Corrected codecov.io URL for proper branch coverage display
+- **Enhanced v1.0.0 migration guidance**: Added migration information to a modern version
+- **Final legacy version**: Last update for `snapshotpl/last-fm-client` support
+
+**Note**: This version is available on the `legacy/0.x` branch for existing projects.
+
+---
+
 ## [0.4.2] – 2025-08-29
 
 ### Maintenance

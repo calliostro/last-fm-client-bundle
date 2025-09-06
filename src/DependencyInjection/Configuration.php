@@ -17,15 +17,26 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('api_key')
-                    ->defaultValue('')
-                    ->info('Your API key')
+                    ->info('Get your API credentials from https://www.last.fm/api/account/create')
+                    ->isRequired()
+                    ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('secret')
-                    ->defaultValue('')
-                    ->info('Your secret')
+                    ->info('API secret from your Last.fm application')
+                    ->isRequired()
+                    ->cannotBeEmpty()
                 ->end()
                 ->scalarNode('session')
-                    ->info('Optionally a fixed user session (e.g. for scrobbling)')
+                    ->info('Optional: session key for user-specific actions (scrobbling, etc.)')
+                ->end()
+                ->arrayNode('http_client_options')
+                    ->info(
+                        "Optional: HTTP client configuration\n" .
+                        "See: https://docs.guzzlephp.org/en/stable/request-options.html"
+                    )
+                    ->defaultValue([])
+                    ->useAttributeAsKey('name')
+                    ->variablePrototype()->end()
                 ->end()
             ->end()
         ;
