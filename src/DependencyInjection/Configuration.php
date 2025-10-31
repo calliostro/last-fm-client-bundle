@@ -1,8 +1,9 @@
 <?php
 
-namespace Calliostro\LastFmClientBundle\DependencyInjection;
+declare(strict_types=1);
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+namespace Calliostro\LastfmBundle\DependencyInjection;
+
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -10,36 +11,34 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('calliostro_last_fm_client');
+        $treeBuilder = new TreeBuilder('calliostro_lastfm');
         $rootNode = $treeBuilder->getRootNode();
 
-        // @phpstan-ignore-next-line: Suppress type error for $rootNode chaining (Symfony config definition)
         $rootNode
             ->children()
-                ->scalarNode('api_key')
-                    ->info('Get your API credentials from https://www.last.fm/api/account/create')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('secret')
-                    ->info('API secret from your Last.fm application')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('session')
-                    ->info('Optional: session key for user-specific actions (scrobbling, etc.)')
-                ->end()
-                ->arrayNode('http_client_options')
-                    ->info(
-                        "Optional: HTTP client configuration\n" .
-                        "See: https://docs.guzzlephp.org/en/stable/request-options.html"
-                    )
-                    ->defaultValue([])
-                    ->useAttributeAsKey('name')
-                    ->variablePrototype()->end()
-                ->end()
+            ->scalarNode('api_key')
+            ->info('Your Last.fm API key (recommended - get from https://www.last.fm/api/account/create)')
             ->end()
-        ;
+            ->scalarNode('api_secret')
+            ->info('Your Last.fm API secret (required for write operations)')
+            ->end()
+            ->scalarNode('user_agent')
+            ->defaultNull()
+            ->info('HTTP User-Agent header for API requests (optional)')
+            ->validate()
+            ->ifTrue(fn ($v) => \is_string($v) && \strlen($v) > 200)
+            ->thenInvalid('User-Agent cannot be longer than 200 characters')
+            ->end()
+            ->end()
+            ->scalarNode('rate_limiter')
+            ->defaultNull()
+            ->info('Symfony RateLimiterFactory service ID for advanced rate limiting (requires symfony/rate-limiter)')
+            ->validate()
+            ->ifTrue(fn ($v) => \is_string($v) && '' === trim($v))
+            ->thenInvalid('Rate limiter service ID cannot be empty')
+            ->end()
+            ->end()
+            ->end();
 
         return $treeBuilder;
     }

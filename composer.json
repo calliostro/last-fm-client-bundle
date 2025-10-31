@@ -1,6 +1,6 @@
 {
-    "name": "calliostro/last-fm-client-bundle",
-    "description": "Symfony bundle for the Last.fm API - scrobbling, music data & integration made easy",
+    "name": "calliostro/lastfm-bundle",
+    "description": "Ultra-lightweight Symfony bundle for the Last.fm API — music scrobbling, data & integration made easy",
     "type": "symfony-bundle",
     "keywords": [
         "symfony-bundle",
@@ -8,13 +8,16 @@
         "php",
         "lastfm",
         "last-fm",
-        "scrobbling",
+        "lastfm-api",
         "music",
         "api-client",
         "web-api",
-        "audio"
+        "audio",
+        "scrobbling",
+        "php8",
+        "lightweight"
     ],
-    "homepage": "https://github.com/calliostro/last-fm-client-bundle",
+    "homepage": "https://github.com/calliostro/lastfm-bundle",
     "license": "MIT",
     "authors": [
         {
@@ -24,30 +27,44 @@
     ],
     "require": {
         "php": "^8.1",
-        "calliostro/lastfm-client": "^1.0.0",
-        "symfony/config": "^6.4|^7.0|^8.0",
-        "symfony/dependency-injection": "^6.4|^7.0|^8.0",
-        "symfony/http-kernel": "^6.4|^7.0|^8.0"
+        "calliostro/lastfm-client": "v2.0.0-beta.1"
+    },
+    "suggest": {
+        "symfony/rate-limiter": "For advanced rate limiting functionality"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "6.4|^7.0|^8.0",
+        "phpstan/phpstan": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.87",
+        "symfony/rate-limiter": "^6.4|^7.0|^8.0",
+        "symfony/config": "8.0.x-dev",
+        "symfony/dependency-injection": "8.0.x-dev",
+        "symfony/http-kernel": "8.0.x-dev",
+        "symfony/security-core": "8.0.x-dev"
     },
     "autoload": {
         "psr-4": {
-            "Calliostro\\LastFmClientBundle\\": "src/"
+            "Calliostro\\LastfmBundle\\": "src/"
         }
-    },
-    "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0|^8.0",
-        "squizlabs/php_codesniffer": "^3.7",
-        "phpstan/phpstan": "^1.10"
     },
     "autoload-dev": {
         "psr-4": {
-            "Calliostro\\LastFmClientBundle\\Tests\\": "tests/"
+            "Calliostro\\LastfmBundle\\Tests\\": "tests/"
         }
     },
     "scripts": {
-        "test": "vendor/bin/simple-phpunit",
-        "cs": "phpcs --standard=PSR12 src/",
-        "cs-fix": "phpcbf --standard=PSR12 src/",
-        "analyse": "phpstan analyse src/ --level=8"
-    }
+        "test": "vendor/bin/simple-phpunit --testsuite=\"Unit Tests\"",
+        "test-unit": "vendor/bin/simple-phpunit --testsuite=\"Unit Tests\"",
+        "test-integration": "vendor/bin/simple-phpunit --testsuite=\"Integration Tests\"",
+        "test-all": "vendor/bin/simple-phpunit --testsuite=\"All Tests\"",
+        "test-coverage": "vendor/bin/simple-phpunit --testsuite=\"Unit Tests\" --coverage-html coverage --coverage-clover coverage.xml",
+        "test-coverage-all": "vendor/bin/simple-phpunit --testsuite=\"All Tests\" --coverage-html coverage --coverage-clover coverage.xml",
+        "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff --verbose",
+        "cs-fix": "vendor/bin/php-cs-fixer fix --verbose",
+        "analyse": "vendor/bin/phpstan analyse src --level=8 --configuration phpstan/symfony8-baseline.neon",
+        "analyse-legacy": "vendor/bin/phpstan analyse src --level=8 --configuration phpstan/symfony-legacy-baseline.neon"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+
 }
