@@ -158,6 +158,10 @@ jobs:
 
       - name: Run tests
         run: ./vendor/bin/simple-phpunit -v
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
+          LASTFM_SESSION: ${{ secrets.LASTFM_SESSION }}
 
   code-quality:
     runs-on: ubuntu-latest
@@ -229,6 +233,10 @@ jobs:
 
       - name: Run tests with coverage
         run: ./vendor/bin/simple-phpunit --coverage-clover coverage.xml
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
+          LASTFM_SESSION: ${{ secrets.LASTFM_SESSION }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
