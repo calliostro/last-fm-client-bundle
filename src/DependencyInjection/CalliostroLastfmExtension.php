@@ -41,19 +41,26 @@ class CalliostroLastfmExtension extends Extension
 
         if (!empty($config['api_key']) && !empty($config['api_secret'])) {
             // API Key and Secret authentication (recommended for applications)
-            $clientDefinition->setFactory(['Calliostro\\LastFm\\LastFmClientFactory', 'createWithApiKey']);
+            $clientDefinition->setFactory([new Reference('calliostro_lastfm.client_factory'), 'createClient']);
             $clientDefinition->setArguments([
                 $config['api_key'],
                 $config['api_secret'],
                 $this->getClientOptions($container, $config),
+                $config['session_key'] ?? null,
             ]);
         } elseif (!empty($config['api_key'])) {
             // API Key only authentication (read-only operations)
-            $clientDefinition->setArguments([$this->getClientOptions($container, $config)]);
-            $clientDefinition->addMethodCall('setApiCredentials', [$config['api_key']]);
+            $clientDefinition->setFactory([new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey']);
+            $clientDefinition->setArguments([
+                $config['api_key'],
+                $this->getClientOptions($container, $config),
+            ]);
         } else {
             // Create basic client without authentication (very limited functionality)
-            $clientDefinition->setArguments([$this->getClientOptions($container, $config)]);
+            $clientDefinition->setFactory([new Reference('calliostro_lastfm.client_factory'), 'createBasicClient']);
+            $clientDefinition->setArguments([
+                $this->getClientOptions($container, $config),
+            ]);
         }
     }
 

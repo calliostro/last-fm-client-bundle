@@ -1,6 +1,0 @@
-# Test configuration for Last.fm Bundle
-# Using environment variables as recommended by Discogs style
-calliostro_lastfm:
-    api_key: '%env(LASTFM_API_KEY)%'
-    api_secret: '%env(LASTFM_SECRET)%'
-    user_agent: 'LastfmBundle/2.0 +https://github.com/calliostro/lastfm-bundle'

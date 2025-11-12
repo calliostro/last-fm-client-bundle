@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Calliostro\LastfmBundle\Tests\Unit;
 
 use Calliostro\LastfmBundle\DependencyInjection\CalliostroLastfmExtension;
+use Symfony\Component\DependencyInjection\Reference;
 
 final class CalliostroLastfmExtensionTest extends UnitTestCase
 {
@@ -16,6 +17,7 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         $extension->load([], $container);
 
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
+        $this->assertDefinitionExists($container, 'calliostro_lastfm.client_factory');
     }
 
     public function testLoadWithRateLimiter(): void
@@ -58,8 +60,8 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         $extension->load($config, $container);
 
         $this->assertDefinitionHasFactory($container, 'calliostro_lastfm.lastfm_client',
-            ['Calliostro\\LastFm\\LastFmClientFactory', 'createWithApiKey']);
-        $this->assertDefinitionArgumentCount($container, 'calliostro_lastfm.lastfm_client', 3);
+            [new Reference('calliostro_lastfm.client_factory'), 'createClient']);
+        $this->assertDefinitionArgumentCount($container, 'calliostro_lastfm.lastfm_client', 4);
         $this->assertDefinitionArgumentEquals($container, 'calliostro_lastfm.lastfm_client', 0, 'test_key');
         $this->assertDefinitionArgumentEquals($container, 'calliostro_lastfm.lastfm_client', 1, 'test_secret');
     }
@@ -75,6 +77,10 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
 
         // When no rate limiter and no API credentials are configured, the basic client should exist
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
+
+        $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
+        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createBasicClient'];
+        $this->assertEquals($expectedFactory, $definition->getFactory());
     }
 
     public function testLoadWithApiKeyOnly(): void
@@ -90,18 +96,18 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
 
         $extension->load($config, $container);
 
-        // With API key only, should use normal constructor (not factory) and method call
+        // With API key only, should use factory method for API key only
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
         $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
 
-        // Should not use factory for API key only
-        $this->assertNull($definition->getFactory());
+        // Should use factory for API key only
+        $this->assertNotNull($definition->getFactory());
+        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey'];
+        $this->assertEquals($expectedFactory, $definition->getFactory());
 
-        // Should have one method call to setApiCredentials
-        $methodCalls = $definition->getMethodCalls();
-        $this->assertCount(1, $methodCalls);
-        $this->assertEquals('setApiCredentials', $methodCalls[0][0]);
-        $this->assertEquals(['test_key_123'], $methodCalls[0][1]);
+        // Should have 2 arguments: api_key and options
+        $this->assertCount(2, $definition->getArguments());
+        $this->assertEquals('test_key_123', $definition->getArguments()[0]);
     }
 
     public function testLoadWithCustomUserAgent(): void
@@ -134,23 +140,22 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
 
         $extension->load($config, $container);
 
-        // With API key only (no secret), should use normal constructor and method call
+        // With API key only (no secret), should use factory method
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
         $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
 
-        // Should not use factory for API key only
-        $this->assertNull($definition->getFactory());
+        // Should use factory for API key only
+        $this->assertNotNull($definition->getFactory());
+        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey'];
+        $this->assertEquals($expectedFactory, $definition->getFactory());
 
-        // Should have one method call to setApiCredentials
-        $methodCalls = $definition->getMethodCalls();
-        $this->assertCount(1, $methodCalls);
-        $this->assertEquals('setApiCredentials', $methodCalls[0][0]);
-        $this->assertEquals(['test_key_123'], $methodCalls[0][1]);
+        // Should have 2 arguments: api_key and options
+        $arguments = $definition->getArguments();
+        $this->assertCount(2, $arguments);
+        $this->assertEquals('test_key_123', $arguments[0]);
 
         // Check that user agent is passed in options
-        $arguments = $definition->getArguments();
-        $this->assertCount(1, $arguments);
-        $options = $arguments[0];
+        $options = $arguments[1];
         $this->assertArrayHasKey('headers', $options);
         $this->assertEquals('TestApp/1.0', $options['headers']['User-Agent']);
     }
