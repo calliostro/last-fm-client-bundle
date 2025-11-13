@@ -9,9 +9,7 @@ use Calliostro\LastFm\LastFmClient;
 /**
  * Factory class for creating LastFmClient instances with proper validation.
  *
- * This factory provides runtime validation with clear error messages that guide
- * developers to the proper configuration. It matches the pattern used in
- * Discogs Bundle v4.0.0-beta.4 for consistent developer experience.
+ * Provides simple factory methods for different authentication scenarios.
  */
 final class LastFmClientFactory
 {

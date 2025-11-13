@@ -5,11 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0-beta.3](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0-beta.3) – 2025-11-13
+## [2.0.0-beta.4](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0-beta.4) – 2025-11-13
 
 ### 🚀 Complete Rewrite — Fresh Start for Last.fm
 
-This version represents a complete architectural rewrite based on the Discogs Bundle structure. v2.0.0 is essentially a new bundle adapted for the Last.fm API.
+This version represents a complete architectural rewrite with modern Symfony patterns. v2.0.0 is essentially a new bundle built for the Last.fm API.
 
 ### Added
 
@@ -25,7 +25,7 @@ This version represents a complete architectural rewrite based on the Discogs Bu
 - **Comprehensive Test Suite** with unit and integration tests
 - **Professional Documentation** with clear examples and setup guides
 - **Modern Bundle Structure** following all Symfony best practices
-- **Robust Configuration Validation** with meaningful error messages
+- **Robust Configuration Validation** with meaningful error messages and setup instructions
 - **Music Scrobbling Support** throughout documentation and examples
 
 ### Changed
@@ -42,7 +42,7 @@ This version represents a complete architectural rewrite based on the Discogs Bu
 
 ### Removed
 
-- **Discogs-specific Configuration** – Replaced with Last.fm specific options
+- **Legacy Configuration** – Replaced with modern Last.fm specific options
 - **Array Parameter Style** – Methods no longer accept parameter arrays
 - **Legacy Dependencies** – Clean implementation based on modern Last.fm client
 - **Backward Compatibility** – This is a fresh start adapted for Last.fm API

@@ -60,7 +60,7 @@ final class BundleIntegrationTest extends UnitTestCase
 
     public function testBundleServicesArePrivate(): void
     {
-        $config = ['api_key' => 'test', 'api_secret' => 'test'];
+        $config = ['api_key' => 'test_api_key_123', 'api_secret' => 'test_api_secret_123'];
         $container = $this->bootKernelAndGetContainer($config);
 
         // The main service should be public for injection
@@ -100,7 +100,7 @@ final class BundleIntegrationTest extends UnitTestCase
     public function testBundleServiceDefinitionStructure(): void
     {
         $kernel = TestKernel::createForFunctional([
-            'api_key' => 'test_key',
+            'api_key' => 'test_api_key_123',
             'api_secret' => 'test_secret',
         ]);
 
@@ -122,7 +122,7 @@ final class BundleIntegrationTest extends UnitTestCase
     {
         $config = [
             'user_agent' => 'ParameterTest/1.0',
-            'api_key' => 'param_key',
+            'api_key' => 'param_api_key_123',
             'api_secret' => 'param_secret',
         ];
 

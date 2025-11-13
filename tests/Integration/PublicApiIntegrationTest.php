@@ -38,7 +38,7 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
     }
 
     /**
-     * Test that the bundle correctly uses environment variables (Discogs style).
+     * Test that the bundle correctly uses environment variables.
      */
     public function testEnvironmentVariableUsage(): void
     {

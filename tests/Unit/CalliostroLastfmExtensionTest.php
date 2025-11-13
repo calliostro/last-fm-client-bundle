@@ -17,7 +17,7 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         $extension->load([], $container);
 
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
-        $this->assertDefinitionExists($container, 'calliostro_lastfm.client_factory');
+        $this->assertDefinitionExists($container, 'calliostro_lastfm.di_client_factory');
     }
 
     public function testLoadWithRateLimiter(): void
@@ -45,7 +45,7 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         // But we verified the client definition exists and extension doesn't throw errors
     }
 
-    public function testLoadWithApiKeyAndSecretOnly(): void
+    public function testLoadWithFullConfiguration(): void
     {
         $container = $this->createContainerBuilder();
         $extension = new CalliostroLastfmExtension();
@@ -54,16 +54,65 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
             [
                 'api_key' => 'test_key',
                 'api_secret' => 'test_secret',
+                'user_agent' => 'CustomAgent/1.0',
+                'session_key' => 'test_session_key',
+                'rate_limiter' => 'app.my_rate_limiter',
             ],
         ];
 
         $extension->load($config, $container);
 
-        $this->assertDefinitionHasFactory($container, 'calliostro_lastfm.lastfm_client',
-            [new Reference('calliostro_lastfm.client_factory'), 'createClient']);
-        $this->assertDefinitionArgumentCount($container, 'calliostro_lastfm.lastfm_client', 4);
-        $this->assertDefinitionArgumentEquals($container, 'calliostro_lastfm.lastfm_client', 0, 'test_key');
-        $this->assertDefinitionArgumentEquals($container, 'calliostro_lastfm.lastfm_client', 1, 'test_secret');
+        $this->assertTrue($container->hasDefinition('calliostro_lastfm.lastfm_client'));
+        $this->assertTrue($container->hasDefinition('calliostro_lastfm.rate_limiter_middleware'));
+
+        $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
+        $arguments = $clientDefinition->getArguments();
+
+        $this->assertEquals('test_key', $arguments[0]);      // api_key
+        $this->assertEquals('test_secret', $arguments[1]);   // api_secret
+        $this->assertEquals('test_session_key', $arguments[2]); // session_key
+
+        $optionsArray = $arguments[3];
+        $this->assertEquals('CustomAgent/1.0', $optionsArray['headers']['User-Agent']);
+        $this->assertTrue(isset($optionsArray['handler']));
+    }
+
+    /**
+     * @runInSeparateProcess
+     *
+     * @preserveGlobalState disabled
+     */
+    public function testLoadWithRateLimiterWhenComponentNotAvailable(): void
+    {
+        // This test runs in a separate process where we can mock the class_exists function
+        // by using PHP's namespace fallback behavior
+
+        // Create a mock function in our namespace that overrides class_exists
+        eval('
+            namespace Calliostro\LastfmBundle\DependencyInjection;
+            function class_exists($className) {
+                if ($className === "Symfony\\\\Component\\\\RateLimiter\\\\RateLimiterFactory") {
+                    return false; // Simulate missing component
+                }
+                return \\class_exists($className);
+            }
+        ');
+
+        $container = $this->createContainerBuilder();
+        $extension = new CalliostroLastfmExtension();
+
+        $config = [
+            [
+                'api_key' => 'test_key',
+                'api_secret' => 'test_secret',
+                'rate_limiter' => 'my_rate_limiter_service',
+            ],
+        ];
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('To use the rate_limiter configuration, you must install symfony/rate-limiter. Run: composer require symfony/rate-limiter');
+
+        $extension->load($config, $container);
     }
 
     public function testLoadWithoutRateLimiter(): void
@@ -79,7 +128,7 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
 
         $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createBasicClient'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $definition->getFactory());
     }
 
@@ -96,17 +145,17 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
 
         $extension->load($config, $container);
 
-        // With API key only, should use factory method for API key only
+        // With API key only, should use unified DI factory
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
         $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
 
-        // Should use factory for API key only
+        // Should use unified DI factory
         $this->assertNotNull($definition->getFactory());
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $definition->getFactory());
 
-        // Should have 2 arguments: api_key and options
-        $this->assertCount(2, $definition->getArguments());
+        // Should have 4 arguments: api_key, api_secret, session_key, options
+        $this->assertCount(4, $definition->getArguments());
         $this->assertEquals('test_key_123', $definition->getArguments()[0]);
     }
 
@@ -140,46 +189,50 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
 
         $extension->load($config, $container);
 
-        // With API key only (no secret), should use factory method
+        // With API key only (no secret), should use unified DI factory
         $this->assertDefinitionExists($container, 'calliostro_lastfm.lastfm_client');
         $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
 
-        // Should use factory for API key only
+        // Should use unified DI factory
         $this->assertNotNull($definition->getFactory());
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $definition->getFactory());
 
-        // Should have 2 arguments: api_key and options
+        // Should have 4 arguments: api_key, api_secret, session_key, options
         $arguments = $definition->getArguments();
-        $this->assertCount(2, $arguments);
-        $this->assertEquals('test_key_123', $arguments[0]);
+        $this->assertCount(4, $arguments);
+        $this->assertEquals('test_key_123', $arguments[0]);  // api_key
+        $this->assertNull($arguments[1]);  // api_secret (not set)
+        $this->assertNull($arguments[2]);  // session_key (not set)
 
         // Check that user agent is passed in options
-        $options = $arguments[1];
+        $options = $arguments[3];
         $this->assertArrayHasKey('headers', $options);
         $this->assertEquals('TestApp/1.0', $options['headers']['User-Agent']);
     }
 
-    public function testLoadWithRateLimiterWhenRateLimiterNotAvailable(): void
+    public function testIsRateLimiterAvailableReturnsTrue(): void
     {
-        // This test can only run when symfony/rate-limiter is NOT installed
-        // If it's installed, we skip this test as the condition cannot be tested
-        if (class_exists('Symfony\\Component\\RateLimiter\\RateLimiterFactory')) {
-            $this->markTestSkipped('symfony/rate-limiter is installed, cannot test unavailable scenario');
-        }
-
-        $container = $this->createContainerBuilder();
         $extension = new CalliostroLastfmExtension();
 
-        $config = [
-            [
-                'rate_limiter' => 'my_rate_limiter_service',
-            ],
-        ];
+        // Use reflection to test the private method
+        $reflection = new \ReflectionClass($extension);
+        $method = $reflection->getMethod('isRateLimiterAvailable');
+        $method->setAccessible(true);
 
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('To use the rate_limiter configuration, you must install symfony/rate-limiter');
+        $result = $method->invoke($extension);
 
-        $extension->load($config, $container);
+        // Since symfony/rate-limiter is installed, this should return true
+        $this->assertTrue($result);
+    }
+
+    /**
+     * Test the getAlias method to achieve 100% coverage.
+     */
+    public function testGetAlias(): void
+    {
+        $extension = new CalliostroLastfmExtension();
+
+        $this->assertEquals('calliostro_lastfm', $extension->getAlias());
     }
 }

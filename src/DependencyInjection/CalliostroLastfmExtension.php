@@ -39,29 +39,14 @@ final class CalliostroLastfmExtension extends Extension
     {
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
 
-        if (!empty($config['api_key']) && !empty($config['api_secret'])) {
-            // API Key and Secret authentication (recommended for applications)
-            $clientDefinition->setFactory([new Reference('calliostro_lastfm.client_factory'), 'createClient']);
-            $clientDefinition->setArguments([
-                $config['api_key'],
-                $config['api_secret'],
-                $this->getClientOptions($container, $config),
-                $config['session_key'] ?? null,
-            ]);
-        } elseif (!empty($config['api_key'])) {
-            // API Key only authentication (read-only operations)
-            $clientDefinition->setFactory([new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey']);
-            $clientDefinition->setArguments([
-                $config['api_key'],
-                $this->getClientOptions($container, $config),
-            ]);
-        } else {
-            // Create basic client without authentication (very limited functionality)
-            $clientDefinition->setFactory([new Reference('calliostro_lastfm.client_factory'), 'createBasicClient']);
-            $clientDefinition->setArguments([
-                $this->getClientOptions($container, $config),
-            ]);
-        }
+        // Use unified factory with runtime validation
+        $clientDefinition->setFactory([new Reference('calliostro_lastfm.di_client_factory'), 'createClient']);
+        $clientDefinition->setArguments([
+            $config['api_key'] ?? null,
+            $config['api_secret'] ?? null,
+            $config['session_key'] ?? null,
+            $this->getClientOptions($container, $config),
+        ]);
     }
 
     /**
@@ -88,7 +73,6 @@ final class CalliostroLastfmExtension extends Extension
 
     /**
      * Configure Symfony Rate Limiter integration.
-     * Just pass the RateLimiterFactory service to the client options like in discogs-bundle v4.0.0-beta.
      *
      * @param array<string, mixed> &$options
      */
@@ -99,9 +83,22 @@ final class CalliostroLastfmExtension extends Extension
             throw new \LogicException('To use the rate_limiter configuration, you must install symfony/rate-limiter. Run: composer require symfony/rate-limiter');
         }
 
-        // Simply pass the RateLimiterFactory service reference to client options
-        // The underlying lastfm-client will handle rate limiting internally if it supports it
-        $options['rate_limiter'] = new Reference($rateLimiterService);
+        // Create the rate limiter middleware service
+        $middlewareDefinition = $container->register('calliostro_lastfm.rate_limiter_middleware', 'Calliostro\\LastfmBundle\\Middleware\\RateLimiterMiddleware');
+        $middlewareDefinition->setArguments([
+            new Reference($rateLimiterService),
+            'lastfm_api', // Default limiter key
+        ]);
+
+        // Create a handler stack with the rate limiter middleware
+        $handlerDefinition = $container->register('calliostro_lastfm.rate_limiter_handler_stack', 'GuzzleHttp\\HandlerStack');
+        $handlerDefinition->setFactory(['GuzzleHttp\\HandlerStack', 'create']);
+        $handlerDefinition->addMethodCall('push', [
+            new Reference('calliostro_lastfm.rate_limiter_middleware'),
+            'rate_limiter',
+        ]);
+
+        $options['handler'] = new Reference('calliostro_lastfm.rate_limiter_handler_stack');
     }
 
     /**
@@ -117,8 +114,9 @@ final class CalliostroLastfmExtension extends Extension
 
     /**
      * Check if the symfony/rate-limiter component is available.
+     * This method is protected to allow testing.
      */
-    private function isRateLimiterAvailable(): bool
+    protected function isRateLimiterAvailable(): bool
     {
         return class_exists('Symfony\\Component\\RateLimiter\\RateLimiterFactory');
     }

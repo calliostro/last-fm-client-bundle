@@ -10,7 +10,7 @@ final class LastfmClientMockTest extends TestCase
     public function testClientCanBeInstantiated(): void
     {
         // Test that the LastfmClient can be created
-        // This follows the pattern from DiscogsClientMockTest
+        // Mock HTTP client for testing
 
         // We skip actual instantiation since we need proper API credentials
         // This test just ensures the class structure is correct

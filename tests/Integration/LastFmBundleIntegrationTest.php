@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Integration tests matching Discogs Bundle Beta 4 patterns.
+ * Integration tests for the Last.fm Bundle.
  *
  * Tests bundle loading, configuration processing, and service creation
  * with focus on environment variable support and runtime validation.
@@ -21,7 +21,7 @@ final class LastFmBundleIntegrationTest extends TestCase
 {
     /**
      * Test that the bundle loads successfully with environment variables.
-     * This matches the Discogs Bundle pattern of supporting environment variables
+     * Test that environment variables are properly resolved at runtime
      * without throwing compile-time errors.
      */
     public function testBundleLoadsWithEnvironmentVariables(): void
@@ -53,7 +53,7 @@ final class LastFmBundleIntegrationTest extends TestCase
 
     /**
      * Test that the bundle loads with empty configuration without compilation errors.
-     * This is crucial for Discogs Bundle Beta 4 compatibility - no compile-time validation.
+     * Runtime validation allows environment variables to be properly resolved.
      */
     public function testBundleLoadsWithEmptyConfiguration(): void
     {

@@ -27,7 +27,7 @@ Configure the bundle in `config/packages/calliostro_lastfm.yaml`:
 
 ```yaml
 calliostro_lastfm:
-    # Required: API Key (get from https://www.last.fm/api/account/create)
+    # Required: API Key for all practical operations (get from https://www.last.fm/api/account/create)
     api_key: '%env(LASTFM_API_KEY)%'
     
     # Required for authenticated operations: API Secret  
@@ -46,7 +46,7 @@ calliostro_lastfm:
 
 **API Key:** You need to [create an API account](https://www.last.fm/api/account/create) at Last.fm to get your API key. This is required for all operations.
 
-**API Secret:** Required for authenticated write operations. Used together with API Key to generate signatures for authenticated requests.
+**API Secret:** Required for authenticated write operations like scrobbling, loving tracks, or updating now playing status. Used together with API Key to generate signatures for authenticated requests.
 
 **Session Key:** Required for user-specific authenticated operations like scrobbling tracks, loving tracks, updating now playing status, or accessing user's personal data. Obtain this through Last.fm's [authentication flow](https://www.last.fm/api/authentication) or use a pre-generated session key.
 
@@ -174,7 +174,7 @@ class MusicService
 
     public function scrobbleCurrentTrack(string $artist, string $track): void
     {
-        // Scrobbling requires API Key, API Secret AND Session Key (all automatically injected from bundle configuration)
+        // Requires API Key, API Secret AND Session Key
         $this->client->scrobbleTrack(
             artist: $artist,
             track: $track,
@@ -213,9 +213,19 @@ calliostro_lastfm:
     rate_limiter: lastfm_api
 ```
 
-**Note on rate limits:**
+**Choose your rate limit based on your usage:**
 
-Last.fm officially allows 5 requests per second per IP address. Higher rates may result in HTTP 429 responses.
+- **Standard access:** Use 5/sec (as shown above) for all API operations
+- **High-volume applications:** Consider reducing to 3-4/sec for safety margin
+
+The bundle uses a Guzzle middleware that automatically handles rate limiting by:
+
+- Intercepting outgoing requests before they're sent
+- Checking rate limit availability using Symfony's RateLimiter
+- Automatically waiting when limits are exceeded (using microsecond precision)
+- Retrying requests after the appropriate delay
+
+This seamless integration ensures your application never exceeds API limits without requiring any code changes. Higher rates may result in HTTP 429 responses if rate limiting is not configured.
 
 ## 🤝 Contributing
 
