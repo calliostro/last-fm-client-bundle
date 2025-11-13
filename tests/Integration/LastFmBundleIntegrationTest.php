@@ -48,7 +48,7 @@ final class LastFmBundleIntegrationTest extends TestCase
         $extension->load($config, $container);
 
         $this->assertTrue($container->hasDefinition('calliostro_lastfm.lastfm_client'));
-        $this->assertTrue($container->hasDefinition('calliostro_lastfm.client_factory'));
+        $this->assertTrue($container->hasDefinition('calliostro_lastfm.di_client_factory'));
     }
 
     /**
@@ -71,7 +71,7 @@ final class LastFmBundleIntegrationTest extends TestCase
         // Should load without compilation errors
         $extension->load($config, $container);
         $this->assertTrue($container->hasDefinition('calliostro_lastfm.lastfm_client'));
-        $this->assertTrue($container->hasDefinition('calliostro_lastfm.client_factory'));
+        $this->assertTrue($container->hasDefinition('calliostro_lastfm.di_client_factory'));
     }
 
     /**
@@ -90,7 +90,7 @@ final class LastFmBundleIntegrationTest extends TestCase
         // Should load without errors
         $extension->load($config, $container);
         $this->assertTrue($container->hasDefinition('calliostro_lastfm.lastfm_client'));
-        $this->assertTrue($container->hasDefinition('calliostro_lastfm.client_factory'));
+        $this->assertTrue($container->hasDefinition('calliostro_lastfm.di_client_factory'));
     }
 
     /**
@@ -205,7 +205,7 @@ final class LastFmBundleIntegrationTest extends TestCase
 
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
         $this->assertNotNull($clientDefinition->getFactory());
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createBasicClient'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $clientDefinition->getFactory());
     }
 
@@ -238,7 +238,7 @@ final class LastFmBundleIntegrationTest extends TestCase
         // Rate limiter should be passed as an option to the factory
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
         $this->assertNotNull($clientDefinition->getFactory());
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createClient'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $clientDefinition->getFactory());
     }
 

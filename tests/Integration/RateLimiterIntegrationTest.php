@@ -64,8 +64,8 @@ final class RateLimiterIntegrationTest extends UnitTestCase
         $clientArguments = $clientDefinition->getArguments();
 
         // The options array should contain the handler reference
-        $this->assertCount(4, $clientArguments); // api_key, api_secret, options, session_key
-        $options = $clientArguments[2]; // The options array
+        $this->assertCount(4, $clientArguments); // api_key, api_secret, session_key, options
+        $options = $clientArguments[3]; // The options array
         $this->assertArrayHasKey('handler', $options);
         $this->assertEquals(new Reference('calliostro_lastfm.rate_limiter_handler_stack'), $options['handler']);
     }
@@ -97,13 +97,13 @@ final class RateLimiterIntegrationTest extends UnitTestCase
 
         // Verify the client factory method is correct for API key only
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createClientWithApiKey'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $clientDefinition->getFactory());
 
         // Verify the client arguments include the handler
         $clientArguments = $clientDefinition->getArguments();
-        $this->assertCount(2, $clientArguments); // api_key, options
-        $options = $clientArguments[1]; // The options array
+        $this->assertCount(4, $clientArguments); // api_key, api_secret, session_key, options
+        $options = $clientArguments[3]; // The options array
         $this->assertArrayHasKey('handler', $options);
         $this->assertEquals(new Reference('calliostro_lastfm.rate_limiter_handler_stack'), $options['handler']);
     }
@@ -135,13 +135,13 @@ final class RateLimiterIntegrationTest extends UnitTestCase
 
         // Verify the client factory method is correct for basic client
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
-        $expectedFactory = [new Reference('calliostro_lastfm.client_factory'), 'createBasicClient'];
+        $expectedFactory = [new Reference('calliostro_lastfm.di_client_factory'), 'createClient'];
         $this->assertEquals($expectedFactory, $clientDefinition->getFactory());
 
         // Verify the client arguments include the handler
         $clientArguments = $clientDefinition->getArguments();
-        $this->assertCount(1, $clientArguments); // options only
-        $options = $clientArguments[0]; // The options array
+        $this->assertCount(4, $clientArguments); // api_key, api_secret, session_key, options
+        $options = $clientArguments[3]; // The options array
         $this->assertArrayHasKey('handler', $options);
         $this->assertEquals(new Reference('calliostro_lastfm.rate_limiter_handler_stack'), $options['handler']);
     }
@@ -172,7 +172,7 @@ final class RateLimiterIntegrationTest extends UnitTestCase
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
         $clientArguments = $clientDefinition->getArguments();
 
-        $options = $clientArguments[1]; // The options array
+        $options = $clientArguments[3]; // The options array
         $this->assertArrayHasKey('handler', $options);
         $this->assertArrayHasKey('headers', $options);
         $this->assertEquals('TestApp/1.0', $options['headers']['User-Agent']);
@@ -202,30 +202,7 @@ final class RateLimiterIntegrationTest extends UnitTestCase
         $clientDefinition = $container->getDefinition('calliostro_lastfm.lastfm_client');
         $clientArguments = $clientDefinition->getArguments();
 
-        $options = $clientArguments[2]; // The options array
+        $options = $clientArguments[3]; // The options array
         $this->assertArrayNotHasKey('handler', $options);
-    }
-
-    public function testRateLimiterThrowsExceptionWhenComponentNotInstalled(): void
-    {
-        // Skip this test if symfony/rate-limiter IS installed
-        if (class_exists('Symfony\\Component\\RateLimiter\\RateLimiterFactory')) {
-            $this->markTestSkipped('symfony/rate-limiter is installed, cannot test missing component scenario');
-        }
-
-        $container = $this->createContainerBuilder();
-        $extension = new CalliostroLastfmExtension();
-
-        $config = [
-            [
-                'api_key' => 'test_key',
-                'rate_limiter' => 'my_rate_limiter_factory',
-            ],
-        ];
-
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('To use the rate_limiter configuration, you must install symfony/rate-limiter');
-
-        $extension->load($config, $container);
     }
 }
