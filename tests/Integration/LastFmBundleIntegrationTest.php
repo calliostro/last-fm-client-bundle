@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
  * Tests bundle loading, configuration processing, and service creation
  * with focus on environment variable support and runtime validation.
  */
-class LastFmBundleIntegrationTest extends TestCase
+final class LastFmBundleIntegrationTest extends TestCase
 {
     /**
      * Test that the bundle loads successfully with environment variables.

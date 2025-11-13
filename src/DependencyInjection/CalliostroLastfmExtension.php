@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 
-class CalliostroLastfmExtension extends Extension
+final class CalliostroLastfmExtension extends Extension
 {
     public function getAlias(): string
     {
@@ -117,9 +117,8 @@ class CalliostroLastfmExtension extends Extension
 
     /**
      * Check if the symfony/rate-limiter component is available.
-     * This method is protected to allow testing.
      */
-    protected function isRateLimiterAvailable(): bool
+    private function isRateLimiterAvailable(): bool
     {
         return class_exists('Symfony\\Component\\RateLimiter\\RateLimiterFactory');
     }

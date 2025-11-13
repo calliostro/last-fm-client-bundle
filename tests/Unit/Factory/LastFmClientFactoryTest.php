@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * Tests factory pattern with proper runtime validation and clear error messages.
  */
-class LastFmClientFactoryTest extends TestCase
+final class LastFmClientFactoryTest extends TestCase
 {
     private LastFmClientFactory $factory;
 

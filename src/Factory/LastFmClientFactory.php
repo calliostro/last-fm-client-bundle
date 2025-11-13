@@ -13,7 +13,7 @@ use Calliostro\LastFm\LastFmClient;
  * developers to the proper configuration. It matches the pattern used in
  * Discogs Bundle v4.0.0-beta.4 for consistent developer experience.
  */
-class LastFmClientFactory
+final class LastFmClientFactory
 {
     /**
      * Create a LastFmClient with API key and secret authentication.
