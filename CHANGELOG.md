@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0-beta.2](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0-beta.2) – 2025-11-12
+## [2.0.0-beta.3](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0-beta.3) – 2025-11-13
 
 ### 🚀 Complete Rewrite — Fresh Start for Last.fm
 
@@ -14,7 +14,8 @@ This version represents a complete architectural rewrite based on the Discogs Bu
 ### Added
 
 - **API Key Authentication** for all Last.fm operations  
-- **API Secret Support** for write operations like scrobbling and loving tracks
+- **API Secret Support** for authenticated operations (used with Session Key for scrobbling and user operations)
+- **Session Key Support** for authenticated user operations (scrobbling, now playing, user-specific data)
 - **All Last.fm API Methods** with consistent naming and modern parameter style
 - **Complete API Coverage** – Album, Artist, Auth, Chart, Geo, Library, Tag, Track, User methods
 - **Named Parameter Support** – Methods accept individual parameters in camelCase instead of arrays
@@ -29,7 +30,6 @@ This version represents a complete architectural rewrite based on the Discogs Bu
 
 ### Changed
 
-- **Configuration Structure** simplified for Last.fm API requirements (api_key, api_secret)
 - **Method Parameter Style** – All methods now accept individual parameters (e.g., `getArtistInfo(artist: 'name')`) instead of arrays
 - **Method Names** adapted for Last.fm API patterns (e.g., `getArtistTopTracks()`, `scrobbleTrack()`)
 - **Parameter Naming** – All parameters use camelCase convention (e.g., `artist` instead of `artistId`)

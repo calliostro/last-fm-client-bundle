@@ -30,8 +30,12 @@ calliostro_lastfm:
     # Required: API Key (get from https://www.last.fm/api/account/create)
     api_key: '%env(LASTFM_API_KEY)%'
     
-    # Required for write operations: API Secret  
+    # Required for authenticated operations: API Secret  
     api_secret: '%env(LASTFM_SECRET)%'
+    
+    # Optional: Session key for scrobbling and user operations
+    # Get this via Last.fm OAuth flow or use a pre-generated session key
+    # session_key: '%env(LASTFM_SESSION)%'
     
     # Optional: HTTP User-Agent header for API requests
     # user_agent: 'MyApp/1.0 +https://myapp.com'
@@ -42,7 +46,9 @@ calliostro_lastfm:
 
 **API Key:** You need to [create an API account](https://www.last.fm/api/account/create) at Last.fm to get your API key. This is required for all operations.
 
-**API Secret:** Required for write operations like scrobbling tracks, loving tracks, or posting shouts.
+**API Secret:** Required for authenticated write operations. Used together with API Key to generate signatures for authenticated requests.
+
+**Session Key:** Required for user-specific authenticated operations like scrobbling tracks, loving tracks, updating now playing status, or accessing user's personal data. Obtain this through Last.fm's [authentication flow](https://www.last.fm/api/authentication) or use a pre-generated session key.
 
 **User-Agent:** By default, the client uses `LastfmClient/2.0.0 (+https://github.com/calliostro/lastfm-client)` as User-Agent. You can override this in the configuration if needed.
 
@@ -56,12 +62,12 @@ calliostro_lastfm:
 
 namespace App\Controller;
 
-use Calliostro\Lastfm\LastfmClient;
+use Calliostro\LastFm\LastFmClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MusicController
 {
-    public function artistInfo(string $artist, LastfmClient $client): JsonResponse
+    public function artistInfo(string $artist, LastFmClient $client): JsonResponse
     {
         $artistInfo = $client->getArtistInfo(artist: $artist);
         $topTracks = $client->getArtistTopTracks(artist: $artist, limit: 5);
@@ -78,9 +84,9 @@ class MusicController
 ### Scrobbling and User Data
 
 ```php
-// Requires API Key and Secret + User Authentication
-// Scrobble and love tracks with named parameters
-$lastfm->scrobbleTrack(
+// Scrobbling requires API Key, API Secret AND Session Key
+// All three are automatically injected from configuration
+$client->scrobbleTrack(
     artist: 'Ed Sheeran',
     track: 'Shape of You',
     timestamp: time()
@@ -113,7 +119,7 @@ $topAlbums = $client->getArtistTopAlbums(artist: 'Coldplay');
 - **Symfony Native** – Seamless autowiring with Symfony 6.4, 7.x & 8.x
 - **Future-Ready** – PHP 8.5 and Symfony 8.0 compatible (beta/dev testing)
 - **Well Tested** – Comprehensive test coverage, Symfony coding standards
-- **Flexible Auth** – API Key for read operations, API Key + Secret for write operations
+- **Flexible Auth** – API Key for read operations, API Key + Secret + Session Key for user operations (scrobbling, etc.)
 
 ## 🎵 All Last.fm API Methods as Direct Calls
 
@@ -143,12 +149,12 @@ $topAlbums = $client->getArtistTopAlbums(artist: 'Coldplay');
 
 namespace App\Service;
 
-use Calliostro\Lastfm\LastfmClient;
+use Calliostro\LastFm\LastFmClient;
 
 class MusicService
 {
     public function __construct(
-        private readonly LastfmClient $client
+        private readonly LastFmClient $client
     ) {
     }
 
@@ -168,7 +174,7 @@ class MusicService
 
     public function scrobbleCurrentTrack(string $artist, string $track): void
     {
-        // Requires API Key + Secret + User Authentication
+        // Scrobbling requires API Key, API Secret AND Session Key (all automatically injected from bundle configuration)
         $this->client->scrobbleTrack(
             artist: $artist,
             track: $track,

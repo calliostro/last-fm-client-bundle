@@ -46,7 +46,7 @@ This version represents a ground-up rewrite based on modern Symfony bundle patte
 
 - **Rate limiting integration** - Optional Symfony RateLimiter component support
 - **Scrobbling support** - Full music scrobbling and user operations
-- **Authentication levels** - Read-only (API key) and write operations (API key + secret)
+- **Authentication levels** - Read-only (API key), authenticated operations (API key + secret), and user operations (API key + secret + session key)
 - **Ultra-lightweight** - Minimal overhead, maximum performance
 
 ---
@@ -77,6 +77,7 @@ old_lastfm:
 calliostro_lastfm:
     api_key: '%env(LASTFM_API_KEY)%'
     api_secret: '%env(LASTFM_SECRET)%'
+    session_key: '%env(LASTFM_SESSION)%'  # optional: for authenticated operations
     user_agent: 'MyApp/1.0 +https://myapp.com'
     rate_limiter: lastfm_api  # optional
 ```
@@ -133,9 +134,10 @@ calliostro_lastfm:
 ### Step 4: Update Environment Variables
 
 ```bash
-# .env
+# .env.local
 LASTFM_API_KEY=your_actual_api_key
 LASTFM_SECRET=your_actual_secret
+LASTFM_SESSION=your_session_key  # optional: for authenticated operations
 ```
 
 ### Step 5: Rewrite All API Calls

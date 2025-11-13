@@ -66,8 +66,8 @@ Integration tests are **separated from the CI pipeline** to prevent:
 - Requires environment variables below
 - Tests Bundle authentication configuration:
   - API Key: Read access (artist info, track search)
-  - API Key + Secret: Write access (scrobbling, loving tracks)
-  - User Authentication: Full user operations
+  - API Key + Secret: Authenticated operation signatures
+  - API Key + Secret + Session Key: Full user operations (scrobbling, loving tracks)
 
 ### GitHub Secrets Required
 
@@ -132,7 +132,7 @@ The Symfony bundle provides:
 
 1. **Service Integration**: Seamless LastfmClient autowiring
 2. **Configuration Management**: YAML-based bundle configuration
-3. **Authentication Setup**: API key for read operations, API key + secret for write operations
+3. **Authentication Setup**: API key for read operations, API key + secret + session key for user operations (scrobbling, etc.)
 4. **Rate Limiting**: Optional throttling for API calls (5 requests/second per IP)
 5. **Symfony Integration**: Compatible with Symfony 6.4+ | 7.x | 8.x
 

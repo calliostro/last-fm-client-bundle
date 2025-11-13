@@ -20,7 +20,7 @@ final class Configuration implements ConfigurationInterface
             ->info('Your Last.fm API key (required - get from https://www.last.fm/api/account/create)')
             ->end()
             ->scalarNode('api_secret')
-            ->info('Your Last.fm API secret (required for write operations)')
+            ->info('Your Last.fm API secret (required for authenticated operations)')
             ->end()
             ->scalarNode('session_key')
             ->defaultNull()

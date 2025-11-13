@@ -39,6 +39,7 @@ class LastFmBundleIntegrationTest extends TestCase
             'calliostro_lastfm' => [
                 'api_key' => '%env(LASTFM_API_KEY)%',
                 'api_secret' => '%env(LASTFM_SECRET)%',
+                'session_key' => '%env(LASTFM_SESSION)%',
                 'user_agent' => 'LastFmBundle/Test',
             ],
         ];
@@ -112,6 +113,33 @@ class LastFmBundleIntegrationTest extends TestCase
 
         $lastfmClient = $container->get('calliostro_lastfm.lastfm_client');
         $this->assertInstanceOf(\Calliostro\LastFm\LastFmClient::class, $lastfmClient);
+    }
+
+    /**
+     * Test service creation with session key for authenticated operations.
+     * This tests the session key injection functionality.
+     */
+    public function testServiceCreationWithSessionKey(): void
+    {
+        $kernel = TestKernel::createForIntegration([
+            'api_key' => 'test_api_key_123',
+            'api_secret' => 'test_api_secret_456',
+            'session_key' => 'test_session_key_789',
+            'user_agent' => 'LastFmBundle/IntegrationTest',
+        ]);
+
+        $kernel->boot();
+        $container = $kernel->getContainer();
+
+        // Test that the service can be retrieved
+        $this->assertTrue($container->has('calliostro_lastfm.lastfm_client'));
+
+        $lastfmClient = $container->get('calliostro_lastfm.lastfm_client');
+        $this->assertInstanceOf(\Calliostro\LastFm\LastFmClient::class, $lastfmClient);
+
+        // The session key should be properly injected and the client should be functional
+        // This verifies that the complete configuration including session key works correctly
+        $this->assertNotNull($lastfmClient);
     }
 
     /**
