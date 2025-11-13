@@ -58,13 +58,14 @@ This version represents a ground-up rewrite based on modern Symfony bundle patte
 Since this is a complete rewrite, you need to:
 
 1. **Remove the old bundle** completely
-2. **Install the new v2.0.0 bundle** 
+2. **Install the new v2.0.0 bundle**
 3. **Update all configuration**
 4. **Rewrite all API calls**
 
 ### Old vs New Configuration
 
 #### v1.x Configuration (OLD)
+
 ```yaml
 # This configuration format is no longer supported
 old_lastfm:
@@ -73,6 +74,7 @@ old_lastfm:
 ```
 
 #### v2.0.0 Configuration (NEW)
+
 ```yaml
 calliostro_lastfm:
     api_key: '%env(LASTFM_API_KEY)%'
@@ -85,12 +87,14 @@ calliostro_lastfm:
 ### Old vs New API Usage
 
 #### v1.x API Usage (OLD)
+
 ```php
 # Old method calls (no longer supported)
 $client->getArtistInfo(['artist' => 'Ed Sheeran']);
 ```
 
 #### v2.0.0 API Usage (NEW)
+
 ```php
 # New direct method calls with named parameters
 $client->getArtistInfo(artist: 'Ed Sheeran');
