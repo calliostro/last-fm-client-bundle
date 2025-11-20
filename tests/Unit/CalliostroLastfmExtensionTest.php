@@ -218,7 +218,6 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         // Use reflection to test the private method
         $reflection = new \ReflectionClass($extension);
         $method = $reflection->getMethod('isRateLimiterAvailable');
-        $method->setAccessible(true);
 
         $result = $method->invoke($extension);
 

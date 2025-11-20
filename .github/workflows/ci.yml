@@ -161,7 +161,7 @@ jobs:
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
-          LASTFM_SESSION: ${{ secrets.LASTFM_SESSION }}
+          LASTFM_SESSION_KEY: ${{ secrets.LASTFM_SESSION_KEY }}
 
   code-quality:
     runs-on: ubuntu-latest
@@ -236,7 +236,7 @@ jobs:
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
-          LASTFM_SESSION: ${{ secrets.LASTFM_SESSION }}
+          LASTFM_SESSION_KEY: ${{ secrets.LASTFM_SESSION_KEY }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

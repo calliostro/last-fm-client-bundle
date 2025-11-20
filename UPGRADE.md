@@ -68,8 +68,8 @@ Since this is a complete rewrite, you need to:
 
 ```yaml
 # This configuration format is no longer supported
-old_lastfm:
-    client_id: 'your-key'
+calliostro_last_fm_client:
+    api_key: 'your-key'
     # old configuration structure
 ```
 
@@ -79,8 +79,8 @@ old_lastfm:
 calliostro_lastfm:
     api_key: '%env(LASTFM_API_KEY)%'
     api_secret: '%env(LASTFM_SECRET)%'
-    session_key: '%env(LASTFM_SESSION)%'  # optional: for authenticated operations
-    user_agent: 'MyApp/1.0 +https://myapp.com'
+    session_key: '%env(LASTFM_SESSION_KEY)%'  # optional: for authenticated operations
+    user_agent: 'MyApp/1.0 +https://myapp.com'  # optional
     rate_limiter: lastfm_api  # optional
 ```
 

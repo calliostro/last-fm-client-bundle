@@ -75,11 +75,11 @@ To enable authenticated integration tests in CI/CD, add these secrets to your Gi
 
 #### Repository Settings → Secrets and variables → Actions
 
-| Secret Name            | Description               | Where to get it                                                      |
-|------------------------|---------------------------|----------------------------------------------------------------------|
-| `LASTFM_API_KEY`       | Your Last.fm API key      | [Last.fm API Account](https://www.last.fm/api/account/create)        |
-| `LASTFM_SECRET`        | Your Last.fm API secret   | [Last.fm API Account](https://www.last.fm/api/account/create)        |
-| `LASTFM_SESSION`       | Your Last.fm session key  | [Last.fm Authentication Flow](https://www.last.fm/api/authentication)|
+| Secret Name          | Description              | Where to get it                                                       |
+|----------------------|--------------------------|-----------------------------------------------------------------------|
+| `LASTFM_API_KEY`     | Your Last.fm API key     | [Last.fm API Account](https://www.last.fm/api/account/create)         |
+| `LASTFM_SECRET`      | Your Last.fm API secret  | [Last.fm API Account](https://www.last.fm/api/account/create)         |
+| `LASTFM_SESSION_KEY` | Your Last.fm session key | [Last.fm Authentication Flow](https://www.last.fm/api/authentication) |
 
 ### Local Development
 
@@ -87,7 +87,7 @@ To enable authenticated integration tests in CI/CD, add these secrets to your Gi
 # Set environment variables
 export LASTFM_API_KEY="your-api-key"
 export LASTFM_SECRET="your-api-secret"
-export LASTFM_SESSION="your-session-key"
+export LASTFM_SESSION_KEY="your-session-key"
 
 # Run public tests only (requires API key)
 vendor/bin/phpunit tests/Integration/PublicApiIntegrationTest.php

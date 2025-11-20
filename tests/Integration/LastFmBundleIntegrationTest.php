@@ -29,7 +29,7 @@ final class LastFmBundleIntegrationTest extends TestCase
         $container = new ContainerBuilder(new ParameterBag([
             'env(LASTFM_API_KEY)' => 'test_api_key_123',
             'env(LASTFM_SECRET)' => 'test_secret_456',
-            'env(LASTFM_SESSION)' => 'test_session_789',
+            'env(LASTFM_SESSION_KEY)' => 'test_session_789',
         ]));
 
         $bundle = new CalliostroLastfmBundle();
@@ -39,7 +39,7 @@ final class LastFmBundleIntegrationTest extends TestCase
             'calliostro_lastfm' => [
                 'api_key' => '%env(LASTFM_API_KEY)%',
                 'api_secret' => '%env(LASTFM_SECRET)%',
-                'session_key' => '%env(LASTFM_SESSION)%',
+                'session_key' => '%env(LASTFM_SESSION_KEY)%',
                 'user_agent' => 'LastFmBundle/Test',
             ],
         ];
