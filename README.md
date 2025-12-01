@@ -87,12 +87,12 @@ class MusicController
 // Scrobbling requires API Key, API Secret AND Session Key
 // All three are automatically injected from configuration
 $client->scrobbleTrack(
-    artist: 'Ed Sheeran',
-    track: 'Shape of You',
+    artist: 'The Weeknd',
+    track: 'Blinding Lights',
     timestamp: time()
 );
 
-$client->loveTrack(artist: 'Adele', track: 'Someone Like You');
+$client->loveTrack(artist: 'Olivia Rodrigo', track: 'good 4 u');
 
 $recentTracks = $client->getUserRecentTracks(user: 'username', limit: 10);
 $topArtists = $client->getUserTopArtists(user: 'username', period: '1month');
@@ -101,13 +101,13 @@ $topArtists = $client->getUserTopArtists(user: 'username', period: '1month');
 ### Music Discovery
 
 ```php
-$artistInfo = $client->getArtistInfo(artist: 'Ed Sheeran');
+$artistInfo = $client->getArtistInfo(artist: 'Billie Eilish');
 $albumInfo = $client->getAlbumInfo(artist: 'Taylor Swift', album: 'Midnights');
 $trackInfo = $client->getTrackInfo(artist: 'The Weeknd', track: 'Blinding Lights');
 
-$similarArtists = $client->getArtistSimilar(artist: 'Ed Sheeran');
-$topTracks = $client->getArtistTopTracks(artist: 'Bruno Mars', limit: 10);
-$topAlbums = $client->getArtistTopAlbums(artist: 'Coldplay');
+$similarArtists = $client->getArtistSimilar(artist: 'Olivia Rodrigo');
+$topTracks = $client->getArtistTopTracks(artist: 'Dua Lipa', limit: 10);
+$topAlbums = $client->getArtistTopAlbums(artist: 'Ariana Grande');
 ```
 
 ## ✨ Key Features

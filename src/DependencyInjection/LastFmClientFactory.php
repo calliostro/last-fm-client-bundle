@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Calliostro\LastfmBundle\DependencyInjection;
 
 use Calliostro\LastFm\LastFmClient;
-use Calliostro\LastfmBundle\Factory\LastFmClientFactory as BaseLastFmClientFactory;
 
 /**
  * Factory service for creating LastFmClient instances with runtime validation.
@@ -30,15 +29,13 @@ final class LastFmClientFactory
         $apiSecret = $apiSecret ? trim($apiSecret) : '';
         $sessionKey = $sessionKey ? trim($sessionKey) : '';
 
-        $factory = new BaseLastFmClientFactory();
-
         // Validate and create client based on available credentials
         if (!empty($apiKey) && !empty($apiSecret)) {
-            return $this->createWithApiKeyAndSecret($factory, $apiKey, $apiSecret, $sessionKey, $options);
+            return $this->createWithApiKeyAndSecret($apiKey, $apiSecret, $sessionKey, $options);
         }
 
         if (!empty($apiKey)) {
-            return $this->createWithApiKeyOnly($factory, $apiKey, $options);
+            return $this->createWithApiKeyOnly($apiKey, $options);
         }
 
         // Check for partial credentials and provide helpful error
@@ -47,7 +44,7 @@ final class LastFmClientFactory
         }
 
         // Create anonymous client (rate-limited) - this is allowed
-        return $factory->createBasicClient($options);
+        return new LastFmClient($options);
     }
 
     /**
@@ -55,7 +52,7 @@ final class LastFmClientFactory
      *
      * @param array<string, mixed> $options
      */
-    private function createWithApiKeyAndSecret(BaseLastFmClientFactory $factory, string $apiKey, string $apiSecret, ?string $sessionKey, array $options): LastFmClient
+    private function createWithApiKeyAndSecret(string $apiKey, string $apiSecret, ?string $sessionKey, array $options): LastFmClient
     {
         if (\strlen($apiKey) < 10) {
             throw new \InvalidArgumentException(\sprintf('API key must be at least 10 characters long, got %d characters. %s', \strlen($apiKey), $this->getSetupInstructions()));
@@ -65,7 +62,10 @@ final class LastFmClientFactory
             throw new \InvalidArgumentException(\sprintf('API secret must be at least 10 characters long, got %d characters. %s', \strlen($apiSecret), $this->getSetupInstructions()));
         }
 
-        return $factory->createClient($apiKey, $apiSecret, $options, $sessionKey);
+        $client = new LastFmClient($options);
+        $client->setApiCredentials($apiKey, $apiSecret, $sessionKey);
+
+        return $client;
     }
 
     /**
@@ -73,13 +73,16 @@ final class LastFmClientFactory
      *
      * @param array<string, mixed> $options
      */
-    private function createWithApiKeyOnly(BaseLastFmClientFactory $factory, string $apiKey, array $options): LastFmClient
+    private function createWithApiKeyOnly(string $apiKey, array $options): LastFmClient
     {
         if (\strlen($apiKey) < 10) {
             throw new \InvalidArgumentException(\sprintf('API key must be at least 10 characters long, got %d characters. %s', \strlen($apiKey), $this->getSetupInstructions()));
         }
 
-        return $factory->createClientWithApiKey($apiKey, $options);
+        $client = new LastFmClient($options);
+        $client->setApiCredentials($apiKey);
+
+        return $client;
     }
 
     /**

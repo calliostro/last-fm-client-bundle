@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0-beta.5](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0-beta.5) – 2025-11-20
+## [2.0.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0) – 2025-12-01
 
 ### 🚀 Complete Rewrite — Fresh Start for Last.fm
 
@@ -37,7 +37,7 @@ This version represents a complete architectural rewrite with modern Symfony pat
 - **Service Naming** follows modern Symfony conventions with proper aliases
 - **Error Handling** improved with better exceptions and validation
 - **Performance** optimized for modern PHP versions
-- **Complete API Integration** now based on `calliostro/lastfm-client` v2.0.0-beta.1
+- **Complete API Integration** now based on `calliostro/lastfm-client`
 - **Code Standards** fully compliant with @Symfony and @Symfony:risky rules
 
 ### Removed

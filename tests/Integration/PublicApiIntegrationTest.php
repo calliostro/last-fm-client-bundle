@@ -75,7 +75,7 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
         // Make requests - Bundle is ultra-lightweight with no built-in throttling
         $responses = [];
         for ($i = 0; $i < 2; ++$i) {
-            $responses[] = $client->getArtistInfo(artist: 'Ed Sheeran');
+            $responses[] = $client->getArtistInfo(artist: 'Billie Eilish');
         }
 
         // All requests should succeed
