@@ -18,13 +18,13 @@ final class FunctionalTest extends UnitTestCase
     {
         $container = $this->bootKernelAndGetContainer(['user_agent' => 'test']);
 
-        $LastfmClient = $container->get('calliostro_lastfm.lastfm_client');
-        $this->assertInstanceOf(LastFmClient::class, $LastfmClient);
+        $lastFmClient = $container->get('calliostro_lastfm.lastfm_client');
+        $this->assertInstanceOf(LastFmClient::class, $lastFmClient);
 
         // Verify that the client is properly configured
         // The user agent configuration is handled internally by the bundle
         /* @noinspection PhpConditionAlreadyCheckedInspection */
-        $this->assertInstanceOf(LastFmClient::class, $LastfmClient);
+        $this->assertInstanceOf(LastFmClient::class, $lastFmClient);
     }
 
     public function testServiceWiringWithMinimalConfig(): void
