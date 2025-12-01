@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class IntegrationTestCase extends TestCase
 {
-    protected LastfmClient $client;
+    protected LastFmClient $client;
 
     /**
      * Create a test kernel with the given configuration.

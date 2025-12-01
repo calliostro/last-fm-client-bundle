@@ -13,7 +13,7 @@ final class BundleIntegrationTest extends UnitTestCase
     {
         $container = $this->bootKernelAndGetContainer();
 
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testBundleWithAllConfigurationOptions(): void
@@ -25,7 +25,7 @@ final class BundleIntegrationTest extends UnitTestCase
         ];
 
         $container = $this->bootKernelAndGetContainer($config);
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testBundleWithAdvancedUserAgent(): void
@@ -34,28 +34,28 @@ final class BundleIntegrationTest extends UnitTestCase
             'user_agent' => 'AdvancedTestApp/2.0 +https://test.example.com',
         ];
         $container = $this->bootKernelAndGetContainer($config);
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testBundleWithApiCredentialsOnly(): void
     {
         $config = ['api_key' => 'my_api_key', 'api_secret' => 'my_api_secret'];
         $container = $this->bootKernelAndGetContainer($config);
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testBundleWithApiKeyOnly(): void
     {
         $config = ['api_key' => 'my_api_key_123'];
         $container = $this->bootKernelAndGetContainer($config);
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testBundleWithCustomUserAgent(): void
     {
         $config = ['user_agent' => 'MyCustomApp/2.1.0 +http://example.com'];
         $container = $this->bootKernelAndGetContainer($config);
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testBundleServicesArePrivate(): void
@@ -68,7 +68,7 @@ final class BundleIntegrationTest extends UnitTestCase
 
         // Internal services should not be directly accessible in compiled container
         // (This is expected behavior in Symfony - internal services are private)
-        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastfmClient::class);
+        $this->assertServiceInstanceOf($container, 'calliostro_lastfm.lastfm_client', LastFmClient::class);
     }
 
     public function testMultipleBundleInstancesIsolation(): void
@@ -87,8 +87,8 @@ final class BundleIntegrationTest extends UnitTestCase
         $client1 = $kernel1->getContainer()->get('calliostro_lastfm.lastfm_client');
         $client2 = $kernel2->getContainer()->get('calliostro_lastfm.lastfm_client');
 
-        $this->assertInstanceOf(LastfmClient::class, $client1);
-        $this->assertInstanceOf(LastfmClient::class, $client2);
+        $this->assertInstanceOf(LastFmClient::class, $client1);
+        $this->assertInstanceOf(LastFmClient::class, $client2);
 
         // Clients should be different instances
         $this->assertNotSame($client1, $client2);
@@ -109,7 +109,7 @@ final class BundleIntegrationTest extends UnitTestCase
 
         // Test that we can retrieve the main service
         $client = $container->get('calliostro_lastfm.lastfm_client');
-        $this->assertInstanceOf(LastfmClient::class, $client);
+        $this->assertInstanceOf(LastFmClient::class, $client);
 
         // Test service is singleton (same instance returned)
         $client2 = $container->get('calliostro_lastfm.lastfm_client');
@@ -132,7 +132,7 @@ final class BundleIntegrationTest extends UnitTestCase
 
         // Verify the client is created successfully with all parameters
         $client = $container->get('calliostro_lastfm.lastfm_client');
-        $this->assertInstanceOf(LastfmClient::class, $client);
+        $this->assertInstanceOf(LastFmClient::class, $client);
 
         $kernel->cleanupCache();
     }
@@ -157,8 +157,8 @@ final class BundleIntegrationTest extends UnitTestCase
         $prodClient = $prodKernel->getContainer()->get('calliostro_lastfm.lastfm_client');
         $testClient = $testKernel->getContainer()->get('calliostro_lastfm.lastfm_client');
 
-        $this->assertInstanceOf(LastfmClient::class, $prodClient);
-        $this->assertInstanceOf(LastfmClient::class, $testClient);
+        $this->assertInstanceOf(LastFmClient::class, $prodClient);
+        $this->assertInstanceOf(LastFmClient::class, $testClient);
         $this->assertNotSame($prodClient, $testClient);
 
         $prodKernel->cleanupCache();
