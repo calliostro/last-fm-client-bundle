@@ -27,13 +27,13 @@
     ],
     "require": {
         "php": "^8.1",
-        "calliostro/lastfm-client": "^2.0.0-beta"
+        "calliostro/lastfm-client": "^2.0"
     },
     "suggest": {
         "symfony/rate-limiter": "For advanced rate limiting functionality"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "6.4|^7.0|^8.0",
+        "symfony/phpunit-bridge": "^6.4|^7.0|^8.0",
         "phpstan/phpstan": "^2.1",
         "friendsofphp/php-cs-fixer": "^3.87",
         "symfony/rate-limiter": "^6.4|^7.0|^8.0",
