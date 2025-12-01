@@ -1,11 +1,11 @@
 # ⚡ Last.fm Client Bundle for Symfony – Complete Music Scrobbling & Data Access
 
-[![Package Version](https://img.shields.io/packagist/v/calliostro/lastfm-bundle.svg)](https://packagist.org/packages/calliostro/lastfm-bundle)
-[![Total Downloads](https://img.shields.io/packagist/dt/calliostro/lastfm-bundle.svg)](https://packagist.org/packages/calliostro/lastfm-bundle)
-[![License](https://poser.pugx.org/calliostro/lastfm-bundle/license)](https://packagist.org/packages/calliostro/lastfm-bundle)
+[![Package Version](https://img.shields.io/packagist/v/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
+[![License](https://poser.pugx.org/calliostro/last-fm-client-bundle/license)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue.svg)](https://php.net)
-[![CI](https://github.com/calliostro/lastfm-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/lastfm-bundle/actions/workflows/ci.yml)
-[![Code Coverage](https://codecov.io/gh/calliostro/lastfm-bundle/graph/badge.svg?token=3ATEFYF7A0)](https://codecov.io/gh/calliostro/lastfm-bundle)
+[![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml)
+[![Code Coverage](https://codecov.io/gh/calliostro/last-fm-client-bundle/graph/badge.svg?token=3ATEFYF7A0)](https://codecov.io/gh/calliostro/last-fm-client-bundle)
 [![PHPStan Level](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)](https://phpstan.org/)
 [![Code Style](https://img.shields.io/badge/code%20style-Symfony-brightgreen.svg)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 
