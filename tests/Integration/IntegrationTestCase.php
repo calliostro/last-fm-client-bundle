@@ -2,7 +2,7 @@
 
 namespace Calliostro\LastfmBundle\Tests\Integration;
 
-use Calliostro\Lastfm\LastfmClient;
+use Calliostro\LastFm\LastFmClient;
 use Calliostro\LastfmBundle\Tests\Fixtures\TestKernel;
 use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class IntegrationTestCase extends TestCase
 {
-    protected LastfmClient $client;
+    protected LastFmClient $client;
 
     /**
      * Create a test kernel with the given configuration.
