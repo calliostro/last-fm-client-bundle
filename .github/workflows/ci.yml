@@ -152,7 +152,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: ./vendor/bin/simple-phpunit -v
+        run: composer test
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
@@ -227,7 +227,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run tests with coverage
-        run: ./vendor/bin/simple-phpunit --coverage-clover coverage.xml
+        run: composer test-coverage
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
           LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
