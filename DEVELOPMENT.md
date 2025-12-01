@@ -130,7 +130,7 @@ vendor/bin/phpunit tests/Integration/ --testdox
 
 The Symfony bundle provides:
 
-1. **Service Integration**: Seamless LastfmClient autowiring
+1. **Service Integration**: Seamless LastFmClient autowiring
 2. **Configuration Management**: YAML-based bundle configuration
 3. **Authentication Setup**: API key for read operations, API key + secret + session key for user operations (scrobbling, etc.)
 4. **Rate Limiting**: Optional throttling for API calls (5 requests/second per IP)

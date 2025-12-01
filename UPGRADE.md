@@ -174,7 +174,7 @@ Update all your service and controller code to use the new API methods.
 
 #### Service Not Found
 
-**Error**: Cannot autowire `LastfmClient`
+**Error**: Cannot autowire `LastFmClient`
 
 **Solution**: Make sure you've installed v2.0.0 and cleared cache:
 
