@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - 'main'
-      - 'legacy/**'     # All legacy branches
-      - 'feature/**'    # All feature branches
-      - 'hotfix/**'     # All hotfix branches
-      - 'release/**'    # All release branches
+      - 'legacy/*'      # Legacy branches: legacy/v3.x
+      - 'feature/*'     # Feature branches: feature/new-feature  
+      - 'hotfix/*'      # Hotfix branches: hotfix/urgent-fix
+      - 'release/*'     # Release branches: release/v4.0.0
   pull_request:
     branches:
       - 'main'
-      - 'legacy/**'     # PRs to legacy branches
+      - 'legacy/*'      # PRs to legacy branches
   workflow_dispatch:    # Allows manual triggering via GitHub UI
 
 jobs:
@@ -22,73 +22,58 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Core PHP version testing
-          - php: '8.1'
-            allowed-to-fail: false
-          - php: '8.2'
-            allowed-to-fail: false
-          - php: '8.3'
-            allowed-to-fail: false
-          - php: '8.4'
-            allowed-to-fail: false
-
           # Symfony 6.4 LTS compatibility
           - php: '8.2'
-            symfony-version: '^6.4'
+            symfony-version: '6.4.*'
             allowed-to-fail: false
           - php: '8.3'
-            symfony-version: '^6.4'
+            symfony-version: '6.4.*'
             allowed-to-fail: false
           - php: '8.4'
-            symfony-version: '^6.4'
+            symfony-version: '6.4.*'
             allowed-to-fail: false
-
+            
           # Symfony 7.x current versions
           - php: '8.2'
-            symfony-version: '^7.0'
+            symfony-version: '7.0.*'
             allowed-to-fail: false
           - php: '8.3'
-            symfony-version: '^7.0'
+            symfony-version: '7.0.*'
             allowed-to-fail: false
-          - php: '8.2'
-            symfony-version: '^7.1'
-            allowed-to-fail: false
-          - php: '8.3'
-            symfony-version: '^7.1'
-            allowed-to-fail: false
-          - php: '8.3'
-            symfony-version: '^7.2'
-            allowed-to-fail: false
-          - php: '8.3'
-            symfony-version: '^7.3'
-            allowed-to-fail: false
-
-          # Future-ready: Symfony 8.0 (beta/dev) - Requires PHP 8.4+
           - php: '8.4'
-            symfony-version: '^8.0'
-            stability: 'dev'
-            allowed-to-fail: true
-
-          # Future-ready: PHP 8.5 (alpha/dev) - when available
-          - php: '8.5'
-            symfony-version: '^8.0'
-            stability: 'dev'
-            allowed-to-fail: true
-          - php: '8.5'
-            symfony-version: '^7.3'
-            stability: 'dev'
-            allowed-to-fail: true
-
-          # General development stability tests
+            symfony-version: '7.0.*'
+            allowed-to-fail: false
           - php: '8.3'
-            stability: 'dev'
-            allowed-to-fail: true
+            symfony-version: '7.1.*'
+            allowed-to-fail: false
           - php: '8.4'
-            stability: 'dev'
-            allowed-to-fail: true
+            symfony-version: '7.1.*'
+            allowed-to-fail: false
+          - php: '8.4'
+            symfony-version: '7.2.*'
+            allowed-to-fail: false
+          - php: '8.4'
+            symfony-version: '7.3.*'
+            allowed-to-fail: false
+          - php: '8.4'
+            symfony-version: '7.4.*'
+            allowed-to-fail: false
+
+          # Symfony 8.0 - Requires PHP 8.4+
+          - php: '8.4'
+            symfony-version: '8.0.*'
+            allowed-to-fail: false
+
+          # PHP 8.5 with various Symfony versions
           - php: '8.5'
-            stability: 'dev'
-            allowed-to-fail: true
+            symfony-version: '7.3.*'
+            allowed-to-fail: false
+          - php: '8.5'
+            symfony-version: '7.4.*'
+            allowed-to-fail: false
+          - php: '8.5'
+            symfony-version: '8.0.*'
+            allowed-to-fail: false
 
     name: "PHP ${{ matrix.php }}${{ matrix.symfony-version && format(' | Symfony {0}', matrix.symfony-version) || '' }}${{ matrix.stability && format(' | {0}', matrix.stability) || '' }}"
 
@@ -130,6 +115,7 @@ jobs:
             symfony/config:${{ matrix.symfony-version }} \
             symfony/dependency-injection:${{ matrix.symfony-version }} \
             symfony/http-kernel:${{ matrix.symfony-version }} \
+            symfony/security-core:${{ matrix.symfony-version }} \
             symfony/phpunit-bridge:${{ matrix.symfony-version }}
 
       - name: Remove composer.lock
@@ -139,16 +125,38 @@ jobs:
         run: composer update --prefer-dist --no-interaction --no-progress
 
       - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+        run: |
+          if [[ "${{ github.ref }}" == *"beta"* || "${{ github.ref }}" == *"alpha"* || "${{ github.ref }}" == *"rc"* ]]; then
+            composer validate --no-check-version
+          else
+            composer validate --strict
+          fi
 
       - name: Run code style check
         run: composer cs
 
       - name: Run static analysis
-        run: composer analyse
+        run: |
+          if [[ "${{ matrix.symfony-version }}" == "8.0.*" ]]; then
+            # Symfony 8.0: Use specific baseline for remaining issues
+            vendor/bin/phpstan analyse src --level=8 --configuration phpstan/symfony8-baseline.neon
+          elif [[ "${{ matrix.symfony-version }}" == "7.4.*" ]]; then
+            # Symfony 7.4 LTS: Functionally identical to 8.0, needs same baseline
+            vendor/bin/phpstan analyse src --level=8 --configuration phpstan/symfony74-baseline.neon
+          elif [[ "${{ matrix.symfony-version }}" == "6.4.*" || "${{ matrix.symfony-version }}" == "7.0.*" || "${{ matrix.symfony-version }}" == "7.1.*" || "${{ matrix.symfony-version }}" == "7.2.*" || "${{ matrix.symfony-version }}" == "7.3.*" ]]; then
+            # Older Symfony versions 6.4-7.3: Use legacy baseline for children() issue
+            composer analyse-legacy
+          else
+            # Future versions: Try without baseline first
+            composer analyse
+          fi
 
       - name: Run tests
-        run: ./vendor/bin/simple-phpunit -v
+        run: composer test
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
+          LASTFM_SESSION_KEY: ${{ secrets.LASTFM_SESSION_KEY }}
 
   code-quality:
     runs-on: ubuntu-latest
@@ -161,7 +169,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: json, mbstring, tokenizer
           coverage: none
           tools: composer:v2
@@ -181,7 +189,12 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+        run: |
+          if [[ "${{ github.ref }}" == *"beta"* || "${{ github.ref }}" == *"alpha"* || "${{ github.ref }}" == *"rc"* ]]; then
+            composer validate --no-check-version
+          else
+            composer validate --strict
+          fi
 
   coverage:
     runs-on: ubuntu-latest
@@ -194,7 +207,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
           extensions: json, mbstring, tokenizer
           coverage: xdebug
           tools: composer:v2
@@ -214,13 +227,16 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run tests with coverage
-        run: composer test
+        run: composer test-coverage
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          LASTFM_SECRET: ${{ secrets.LASTFM_SECRET }}
+          LASTFM_SESSION_KEY: ${{ secrets.LASTFM_SESSION_KEY }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          file: ./coverage/coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false

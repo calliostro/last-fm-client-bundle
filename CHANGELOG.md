@@ -5,7 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] – 2025-09-06
+## [2.0.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v2.0.0) – 2025-12-01
+
+### 🚀 Complete Rewrite — Fresh Start for Last.fm
+
+This version represents a complete architectural rewrite with modern Symfony patterns. v2.0.0 is essentially a new bundle built for the Last.fm API.
+
+### Added
+
+- **API Key Authentication** for all Last.fm operations  
+- **API Secret Support** for authenticated operations (used with Session Key for scrobbling and user operations)
+- **Session Key Support** for authenticated user operations (scrobbling, now playing, user-specific data)
+- **All Last.fm API Methods** with consistent naming and modern parameter style
+- **Complete API Coverage** – Album, Artist, Auth, Chart, Geo, Library, Tag, Track, User methods
+- **Named Parameter Support** – Methods accept individual parameters in camelCase instead of arrays
+- **Symfony Rate Limiter Integration** – Optional advanced rate limiting with configurable policies
+- **Symfony 6.4 | 7.x | 8.x Support** with future compatibility
+- **Modern PHP 8.1+ Architecture** with full type safety and modern features
+- **Comprehensive Test Suite** with unit and integration tests
+- **Professional Documentation** with clear examples and setup guides
+- **Modern Bundle Structure** following all Symfony best practices
+- **Robust Configuration Validation** with meaningful error messages and setup instructions
+- **Music Scrobbling Support** throughout documentation and examples
+
+### Changed
+
+- **Method Parameter Style** – All methods now accept individual parameters (e.g., `getArtistInfo(artist: 'name')`) instead of arrays
+- **Method Names** adapted for Last.fm API patterns (e.g., `getArtistTopTracks()`, `scrobbleTrack()`)
+- **Parameter Naming** – All parameters use camelCase convention (e.g., `artist` instead of `artistId`)
+- **Rate Limiting** – Configured for Last.fm's 5 requests per second limit
+- **Service Naming** follows modern Symfony conventions with proper aliases
+- **Error Handling** improved with better exceptions and validation
+- **Performance** optimized for modern PHP versions
+- **Complete API Integration** now based on `calliostro/lastfm-client`
+- **Code Standards** fully compliant with @Symfony and @Symfony:risky rules
+
+### Removed
+
+- **Legacy Configuration** – Replaced with modern Last.fm specific options
+- **Array Parameter Style** – Methods no longer accept parameter arrays
+- **Legacy Dependencies** – Clean implementation based on modern Last.fm client
+- **Backward Compatibility** – This is a fresh start adapted for Last.fm API
+
+## [1.0.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v1.0.0) – 2025-09-06
 
 ### Added
 
@@ -27,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.4.3] – 2025-09-06 (Legacy Branch)
+## [0.4.3](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.4.3) – 2025-09-06 (Legacy Branch)
 
 ### Documentation
 
@@ -39,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.4.2] – 2025-08-29
+## [0.4.2](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.4.2) – 2025-08-29
 
 ### Maintenance
 
@@ -55,7 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.4.1] – 2024-03-15
+## [0.4.1](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.4.1) – 2024-03-15
 
 ### Fixed
 
@@ -64,7 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.4.0] – 2024-01-20
+## [0.4.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.4.0) – 2024-01-20
 
 ### New Features
 
@@ -79,7 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.3.0] – 2023-11-10
+## [0.3.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.3.0) – 2023-11-10
 
 ### Features
 
@@ -93,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.2.0] – 2023-06-15
+## [0.2.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.2.0) – 2023-06-15
 
 ### Enhancements
 
@@ -107,7 +149,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.0] – 2023-04-01
+## [0.1.1](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.1.1) – 2023-04-15
+
+### Fixed
+
+- Minor bug fixes and improvements
+- Documentation updates
+
+---
+
+## [0.1.0](https://github.com/calliostro/lastfm-bundle/releases/tag/v0.1.0) – 2023-04-01
 
 ### Initial Release
 

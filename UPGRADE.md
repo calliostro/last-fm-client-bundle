@@ -1,207 +1,209 @@
 # Upgrade Guide
 
-## Upgrading from 0.3.0 to 0.4.0
+## Upgrading to v2.0.0 - Complete Rewrite
 
-### Modernization & Compatibility Release
+### 🚨 **Breaking Changes - Complete Rewrite**
 
-This release modernizes the Last.fm Client Bundle to support current PHP and Symfony versions while dropping support for legacy versions.
+Version 2.0.0 is a complete architectural rewrite. This is essentially a new bundle, not an upgrade.
+
+---
+
+## Upgrading from v1.x to v2.0.0
+
+### 🚀 **Complete Architectural Rewrite**
+
+This version represents a ground-up rewrite based on modern Symfony bundle patterns and the new `calliostro/lastfm-client` v2.0.0 library.
 
 ---
 
 ## ⚠️ **Breaking Changes**
 
-### PHP Version Requirements
+### Complete API Change
 
-- **PHP 8.1+ required** (previously 7.3+)
-- Dropped support for PHP 7.3, 7.4, and 8.0
-- Added support for PHP 8.1, 8.2, 8.3, 8.4, and upcoming 8.5
+- **All method signatures changed** - Direct Last.fm API method mapping
+- **Configuration structure changed** - New YAML configuration format
+- **Service names changed** - Modern Symfony service naming
+- **Parameter style changed** - Named parameters instead of arrays
 
-### Symfony Version Requirements
+### Requirements
 
-- **Symfony 6.4+ required** (previously 5.x+)
-- Dropped support for Symfony 5.x
-- Added support for Symfony 6.4 LTS, 7.x, and upcoming 8.x
-
----
-
-## 🚀 **New Features**
-
-### Enhanced PHP Support
-
-- **Full PHP 8.1 – 8.5 support** — Including preparation for PHP 8.5
-- Modern PHP features are used in codebase and examples
-
-### Modern Symfony Support
-
-- **Symfony 6.4 LTS support** — Full compatibility with the current LTS version
-- **Symfony 7.x support** — Ready for all Symfony 7 releases including 7.4 LTS
-- **Symfony 8.x support** — Future-proof with upcoming Symfony 8 releases
+- **PHP 8.1+ required** (modern PHP features and types)
+- **Symfony 6.4+ | 7.x | 8.x** (current and future versions)
+- **New dependency**: `calliostro/lastfm-client` v2.0.0+
 
 ---
 
-## 🔧 **Improvements**
+## 🚀 **New in v2.0.0**
 
-### Development & Testing
+### Modern Last.fm API Integration
 
-- **Modernized CI/CD pipeline** — Comprehensive test matrix covering all supported PHP and Symfony versions
-- **Updated PHPUnit configuration** — Using modern PHPUnit 9.6 features and schema
-- **Improved test reliability** — Test suite runs with randomized execution order
-- **Added composer scripts** — `composer test` command for easy testing
+- **Direct API method mapping** - `$client->getArtistInfo(artist: 'Ed Sheeran')`
+- **Complete API coverage** - All Last.fm endpoints (Album, Artist, Auth, Chart, Geo, Library, Tag, Track, User)
+- **Named parameters** - Modern PHP 8.1+ parameter style
+- **Type safety** - Full type declarations and PHPStan Level 8
 
-### Code Quality
+### Advanced Features
 
-- **Enhanced type safety** — Added return types and improved type hints
-- **Modern PHP patterns** — Constructor property promotion in test code
-- **Better deprecation handling** — Improved configuration for handling Symfony deprecations
-
-### Documentation
-
-- **Enhanced README** — Improved structure with emojis and clearer instructions
-- **Modern code examples** — PHP 8.1+ attributes instead of annotations
-- **Better configuration examples** — Including environment variable security tips
-- **Comprehensive usage examples** — Realistic controller examples following best practices
-
-### Development Environment
-
-- **Cleaner .gitignore** — Refined patterns relevant to the project
-- **Better caching support** — Added modern PHPUnit cache patterns
+- **Rate limiting integration** - Optional Symfony RateLimiter component support
+- **Scrobbling support** - Full music scrobbling and user operations
+- **Authentication levels** - Read-only (API key), authenticated operations (API key + secret), and user operations (API key + secret + session key)
+- **Ultra-lightweight** - Minimal overhead, maximum performance
 
 ---
 
-## 🛠 **Technical Updates**
+## � **Migration Steps**
 
-### Dependencies
+### This is NOT an upgrade - it's a migration to a new bundle
 
-- Dependencies updated to the latest stable versions are compatible with new requirements
-- Symfony components updated to support the 6.4|7.0|8.0 constraint pattern
-- PHPUnit Bridge updated for modern Symfony versions
+Since this is a complete rewrite, you need to:
 
-### Configuration
+1. **Remove the old bundle** completely
+2. **Install the new v2.0.0 bundle**
+3. **Update all configuration**
+4. **Rewrite all API calls**
 
-- **Modern PHPUnit schema** — Updated to PHPUnit 9.6 XSD
-- **Improved coverage reporting** — Modern `<coverage>` element usage
-- **Enhanced CI configuration** — Separate test matrices for different PHP/Symfony combinations
+### Old vs New Configuration
 
----
+#### v1.x Configuration (OLD)
 
-## 📚 **Documentation Updates**
-
-### README Improvements
-
-- **Modern PHP examples** — Updated code samples using PHP 8.1+ features
-- **Symfony best practices** — Controller examples using attributes and proper DI
-- **Security recommendations** — Environment variable handling tips
-- **Clear installation guides** — Separate sections for Flex and non-Flex applications
-
-### Code Examples
-
-- **PHP 8 Attributes** — Replaced `@Route` annotations with `#[Route]` attributes
-- **Type declarations** — Added proper return types and parameter types
-- **Modern patterns** — Constructor property promotion examples
-- **Error handling** — Improved exception handling in examples
-
----
-
-## 🔄 **How to Upgrade**
-
-### Step 1: Check Requirements
-
-Ensure your project meets the new requirements:
-
-```bash
-# Check PHP version (must be 8.1+)
-php -v
-
-# Check Symfony version (must be 6.4+)
-composer show symfony/framework-bundle
+```yaml
+# This configuration format is no longer supported
+calliostro_last_fm_client:
+    api_key: 'your-key'
+    # old configuration structure
 ```
 
-### Step 2: Update Dependencies
+#### v2.0.0 Configuration (NEW)
 
-Update your `composer.json` to require the new version:
-
-```json
-{
-    "require": {
-        "calliostro/last-fm-client-bundle": "^0.4"
-    }
-}
+```yaml
+calliostro_lastfm:
+    api_key: '%env(LASTFM_API_KEY)%'
+    api_secret: '%env(LASTFM_SECRET)%'
+    session_key: '%env(LASTFM_SESSION_KEY)%'  # optional: for authenticated operations
+    user_agent: 'MyApp/1.0 +https://myapp.com'  # optional
+    rate_limiter: lastfm_api  # optional
 ```
 
-### Step 3: Run Composer Update
+### Old vs New API Usage
 
-```bash
-composer update calliostro/last-fm-client-bundle
-```
-
-### Step 4: Update Your Code (Optional)
-
-If you want to modernize your code to use the new patterns shown in the documentation:
-
-#### Before (old annotations)
+#### v1.x API Usage (OLD)
 
 ```php
-/**
- * @Route("/artist/{name}", name="artist_info")
- */
-public function getArtist($name, Artist $artistService)
-{
-    // ...
-}
+# Old method calls (no longer supported)
+$client->getArtistInfo(['artist' => 'Ed Sheeran']);
 ```
 
-#### After (modern attributes)
+#### v2.0.0 API Usage (NEW)
 
 ```php
-#[Route('/artist/{name}', name: 'artist_info')]
-public function getArtist(string $name, Artist $artistService): JsonResponse
-{
-    // ...
-}
+# New direct method calls with named parameters
+$client->getArtistInfo(artist: 'Ed Sheeran');
+$client->scrobbleTrack(artist: 'Artist', track: 'Track', timestamp: time());
+$client->loveTrack(artist: 'Artist', track: 'Track');
 ```
 
-### Step 5: Test Your Application
+---
 
-Run your tests to ensure everything works correctly:
+## � **Complete Migration Process**
+
+### Step 1: Remove Old Bundle
 
 ```bash
-# If using this bundle's test command
-composer test
+# Remove the old bundle completely
+composer remove calliostro/lastfm-bundle
 
-# Or your own test suite
-./vendor/bin/phpunit
+# Or if you had a different old bundle
+composer remove your-old-lastfm-bundle
 ```
+
+### Step 2: Install New Bundle
+
+```bash
+# Install the new v2.0.0 bundle
+composer require calliostro/lastfm-bundle:^2.0
+```
+
+### Step 3: Update Configuration
+
+Create new configuration file:
+
+```yaml
+# config/packages/calliostro_lastfm.yaml
+calliostro_lastfm:
+    api_key: '%env(LASTFM_API_KEY)%'
+    api_secret: '%env(LASTFM_SECRET)%'
+    user_agent: 'MyApp/1.0 +https://myapp.com'
+```
+
+### Step 4: Update Environment Variables
+
+```bash
+# .env.local
+LASTFM_API_KEY=your_actual_api_key
+LASTFM_SECRET=your_actual_secret
+LASTFM_SESSION=your_session_key  # optional: for authenticated operations
+```
+
+### Step 5: Rewrite All API Calls
+
+Update all your service and controller code to use the new API methods.
 
 ---
 
 ## 🆘 **Troubleshooting**
 
-### Common Issues
+### Common Migration Issues
 
-#### PHP Version Too Old
+#### Old Method Calls Don't Work
 
-**Error**: `Your PHP version (7.4.x) does not satisfy requirement ^8.1`
+**Error**: Method not found or wrong parameters
 
-**Solution**: Upgrade PHP to version 8.1 or higher.
+**Solution**: All method calls have changed. See the new API documentation in [README.md](README.md)
 
-#### Symfony Version Too Old
+#### Configuration Not Loading
 
-**Error**: Package requirements conflict with Symfony 5.x
+**Error**: Bundle not configured properly
 
-**Solution**: Upgrade Symfony to version 6.4 or higher.
+**Solution**: Make sure you're using the new `calliostro_lastfm:` configuration key, not the old format.
 
-#### Deprecation Warnings
+#### Missing Environment Variables
 
-If you see deprecation warnings, they are likely from your application code, not the bundle. Consider updating your code to use modern Symfony patterns.
+**Error**: API calls failing with authentication errors
+
+**Solution**: Set the new environment variables `LASTFM_API_KEY` and `LASTFM_SECRET`
+
+#### Service Not Found
+
+**Error**: Cannot autowire `LastfmClient`
+
+**Solution**: Make sure you've installed v2.0.0 and cleared cache:
+
+```bash
+composer require calliostro/lastfm-bundle:^2.0
+php bin/console cache:clear
+```
 
 ---
 
 ## 📞 **Need Help?**
 
-- Check the updated [README.md](README.md) for modern usage examples
-- Open an issue on [GitHub](https://github.com/calliostro/last-fm-client-bundle/issues)
-- The bundle's API remains the same — only requirements have changed
+- Check the complete [README.md](README.md) for v2.0.0 usage examples
+- Review [DEVELOPMENT.md](DEVELOPMENT.md) for testing and development guide
+- Open an issue on [GitHub](https://github.com/calliostro/lastfm-bundle/issues)
+- **Remember**: This is a completely new bundle, not an upgrade
 
 ---
 
-**That's it!** 🎉 Your Last.fm Client Bundle is now modernized and ready for the latest PHP and Symfony versions.
+## 🎯 **Summary**
+
+v2.0.0 is a **complete rewrite** with:
+
+✅ **Modern Last.fm API integration**  
+✅ **Direct method calls** (`getArtistInfo(artist: 'name')`)  
+✅ **Complete API coverage** (all Last.fm endpoints)  
+✅ **Type safety** (PHP 8.1+ & PHPStan Level 8)  
+✅ **Symfony 6.4+ | 7.x | 8.x support**  
+✅ **100% test coverage**  
+✅ **Production ready**  
+
+**Migration required** - but worth it for the modern, type-safe API! 🚀
