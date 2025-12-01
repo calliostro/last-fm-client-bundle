@@ -117,7 +117,6 @@ $topAlbums = $client->getArtistTopAlbums(artist: 'Coldplay');
 - **Direct API Calls** – `$client->getArtistInfo(artist: 'name')` maps to `/2.0/?method=artist.getinfo`, no abstractions
 - **Type Safe + IDE Support** – Full PHP 8.1+ types, PHPStan Level 8, method autocomplete  
 - **Symfony Native** – Seamless autowiring with Symfony 6.4, 7.x & 8.x
-- **Future-Ready** – PHP 8.5 and Symfony 8.0 compatible (beta/dev testing)
 - **Well Tested** – Comprehensive test coverage, Symfony coding standards
 - **Flexible Auth** – API Key for read operations, API Key + Secret + Session Key for user operations (scrobbling, etc.)
 
