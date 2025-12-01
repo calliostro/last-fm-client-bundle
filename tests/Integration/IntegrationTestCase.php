@@ -2,7 +2,7 @@
 
 namespace Calliostro\LastfmBundle\Tests\Integration;
 
-use Calliostro\Lastfm\LastfmClient;
+use Calliostro\LastFm\LastFmClient;
 use Calliostro\LastfmBundle\Tests\Fixtures\TestKernel;
 use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;

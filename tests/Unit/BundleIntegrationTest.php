@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Calliostro\LastfmBundle\Tests\Unit;
 
-use Calliostro\Lastfm\LastfmClient;
+use Calliostro\LastFm\LastFmClient;
 use Calliostro\LastfmBundle\Tests\Fixtures\TestKernel;
 
 final class BundleIntegrationTest extends UnitTestCase

@@ -70,7 +70,7 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
 
         // Verify the client works without any rate limiting
         $client = $container->get('calliostro_lastfm.lastfm_client');
-        \assert($client instanceof \Calliostro\Lastfm\LastfmClient);
+        \assert($client instanceof \Calliostro\LastFm\LastFmClient);
 
         // Make requests - Bundle is ultra-lightweight with no built-in throttling
         $responses = [];
@@ -111,7 +111,7 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
         $container = $kernel->getContainer();
 
         $client = $container->get('calliostro_lastfm.lastfm_client');
-        \assert($client instanceof \Calliostro\Lastfm\LastfmClient);
+        \assert($client instanceof \Calliostro\LastFm\LastFmClient);
         $this->client = $client;
     }
 }
