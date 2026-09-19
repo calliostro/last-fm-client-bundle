@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Calliostro\LastfmBundle\Tests\Integration;
 
 /**
@@ -42,14 +44,8 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
      */
     public function testEnvironmentVariableUsage(): void
     {
-        // Skip if no real API key provided
-        if (empty(getenv('LASTFM_API_KEY'))) {
-            $this->markTestSkipped('No LASTFM_API_KEY environment variable provided');
-        }
-
-        // This should use the real environment variables
         $this->assertNotEmpty(getenv('LASTFM_API_KEY'));
-        $this->assertTrue(\strlen(getenv('LASTFM_API_KEY')) > 10);
+        $this->assertTrue(\strlen((string) getenv('LASTFM_API_KEY')) >= 10);
     }
 
     /**
@@ -61,7 +57,7 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
     {
         // Create a kernel with minimal configuration
         $kernel = $this->createKernel([
-            'api_key' => getenv('LASTFM_API_KEY') ?: 'test_key',
+            'api_key' => getenv('LASTFM_API_KEY'),
             'api_secret' => getenv('LASTFM_SECRET') ?: null,
             'user_agent' => 'CalliostroLastfmBundle/IntegrationTest',
         ]);
@@ -102,8 +98,13 @@ final class PublicApiIntegrationTest extends IntegrationTestCase
     {
         parent::setUp();
 
+        $apiKey = getenv('LASTFM_API_KEY');
+        if (empty($apiKey)) {
+            $this->markTestSkipped('No LASTFM_API_KEY environment variable provided');
+        }
+
         $kernel = $this->createKernel([
-            'api_key' => getenv('LASTFM_API_KEY') ?: 'test_key',
+            'api_key' => $apiKey,
             'api_secret' => getenv('LASTFM_SECRET') ?: null,
             'user_agent' => 'CalliostroLastfmBundle/IntegrationTest',
         ]);

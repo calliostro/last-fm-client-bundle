@@ -211,6 +211,30 @@ final class CalliostroLastfmExtensionTest extends UnitTestCase
         $this->assertEquals('TestApp/1.0', $options['headers']['User-Agent']);
     }
 
+    public function testLoadWithRetryOptions(): void
+    {
+        $container = $this->createContainerBuilder();
+        $extension = new CalliostroLastfmExtension();
+
+        $config = [
+            [
+                'auto_retry' => false,
+                'max_retries' => 5,
+            ],
+        ];
+
+        $extension->load($config, $container);
+
+        $definition = $container->getDefinition('calliostro_lastfm.lastfm_client');
+        $arguments = $definition->getArguments();
+        $options = $arguments[3];
+        $this->assertIsArray($options);
+        $this->assertArrayHasKey('auto_retry', $options);
+        $this->assertFalse($options['auto_retry']);
+        $this->assertArrayHasKey('max_retries', $options);
+        $this->assertSame(5, $options['max_retries']);
+    }
+
     public function testIsRateLimiterAvailableReturnsTrue(): void
     {
         $extension = new CalliostroLastfmExtension();

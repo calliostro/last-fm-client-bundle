@@ -1,4 +1,4 @@
-# ⚡ Last.fm Client Bundle for Symfony – Complete Music Scrobbling & Data Access
+# Last.fm API Bundle for Symfony
 
 [![Package Version](https://img.shields.io/packagist/v/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/calliostro/last-fm-client-bundle.svg)](https://packagist.org/packages/calliostro/last-fm-client-bundle)
@@ -7,11 +7,9 @@
 [![CI](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/calliostro/last-fm-client-bundle/actions/workflows/ci.yml)
 [![Code Coverage](https://codecov.io/gh/calliostro/last-fm-client-bundle/graph/badge.svg?token=3ATEFYF7A0)](https://codecov.io/gh/calliostro/last-fm-client-bundle)
 [![PHPStan Level](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)](https://phpstan.org/)
-[![Code Style](https://img.shields.io/badge/code%20style-Symfony-brightgreen.svg)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
+[![Code Style](https://img.shields.io/badge/code%20style-PSR12-brightgreen.svg)](https://github.com/FriendsOfPHP/PHP-CS-Fixer)
 
-> **🚀 SYMFONY INTEGRATION!** Seamless autowiring for the complete Last.fm music API. Zero bloat, maximum performance.
-
-Symfony bundle that integrates the **modern** [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client) into your Symfony application. Built with modern PHP 8.1+ features, dependency injection, and powered by Guzzle.
+A Symfony bundle integrating [`calliostro/lastfm-client`](https://github.com/calliostro/lastfm-client) into your Symfony application. Provides dependency injection, autowiring, built-in retry resilience, scrobbling, and optional rate limiting for PHP 8.1+ and Symfony 6.4, 7.x, and 8.x.
 
 ## 📦 Installation
 
@@ -21,51 +19,59 @@ Install via Composer:
 composer require calliostro/lastfm-bundle
 ```
 
+---
+
 ## ⚙️ Configuration
 
 Configure the bundle in `config/packages/calliostro_lastfm.yaml`:
 
 ```yaml
 calliostro_lastfm:
-    # Required: API Key for all practical operations (get from https://www.last.fm/api/account/create)
+    # API credentials (get from https://www.last.fm/api/account/create)
     api_key: '%env(LASTFM_API_KEY)%'
-    
-    # Required for authenticated operations: API Secret  
     api_secret: '%env(LASTFM_SECRET)%'
-    
-    # Optional: Session key for scrobbling and user operations
-    # Get this via Last.fm OAuth flow or use a pre-generated session key
+
+    # Optional: Session key for authenticated user operations (scrobbling, loving tracks)
     # session_key: '%env(LASTFM_SESSION_KEY)%'
-    
+
     # Optional: HTTP User-Agent header for API requests
     # user_agent: 'MyApp/1.0 +https://myapp.com'
-    
-    # Optional: Professional rate limiting (requires symfony/rate-limiter)
-    # rate_limiter: lastfm_api       # Your configured RateLimiterFactory service
+
+    # Optional: Retry resilience settings (enabled by default)
+    # auto_retry: true     # Automatically wait and retry on 429 and 503 responses (default: true)
+    # max_retries: 3       # Maximum number of retry attempts (default: 3)
+
+    # Optional: Proactive rate limiting (requires symfony/rate-limiter)
+    # rate_limiter: lastfm_api
 ```
 
-**API Key:** You need to [create an API account](https://www.last.fm/api/account/create) at Last.fm to get your API key. This is required for all operations.
+> [!NOTE]
+> By default, the client uses `LastfmClient/2.1.0 (+https://github.com/calliostro/lastfm-client)` as User-Agent. You can override this in the configuration if needed.
 
-**API Secret:** Required for authenticated write operations like scrobbling, loving tracks, or updating now playing status. Used together with API Key to generate signatures for authenticated requests.
+### Authentication Credentials
 
-**Session Key:** Required for user-specific authenticated operations like scrobbling tracks, loving tracks, updating now playing status, or accessing user's personal data. Obtain this through Last.fm's [authentication flow](https://www.last.fm/api/authentication) or use a pre-generated session key.
+- **API Key:** Required for all API requests. Obtain your API key from [Last.fm API Account Creation](https://www.last.fm/api/account/create).
+- **API Secret:** Required for signed operations (scrobbling, loving tracks, now playing updates).
+- **Session Key:** Required for user-specific actions. Obtain this via the [Last.fm Authentication Flow](https://www.last.fm/api/authentication) or mobile authentication.
+- **Anonymous Access:** If no credentials are configured, the client provides limited access to unauthenticated public endpoints.
 
-**User-Agent:** By default, the client uses `LastfmClient/2.0.0 (+https://github.com/calliostro/lastfm-client)` as User-Agent. You can override this in the configuration if needed.
+---
 
 ## 🚀 Quick Start
 
 ### Basic Usage
 
+Inject the `LastFmClient` service directly into your controllers or services:
+
 ```php
 <?php
-// src/Controller/MusicController.php
 
 namespace App\Controller;
 
 use Calliostro\LastFm\LastFmClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class MusicController
+final class MusicController
 {
     public function artistInfo(string $artist, LastFmClient $client): JsonResponse
     {
@@ -84,8 +90,7 @@ class MusicController
 ### Scrobbling and User Data
 
 ```php
-// Scrobbling requires API Key, API Secret AND Session Key
-// All three are automatically injected from configuration
+// Scrobbling requires api_key, api_secret, and session_key
 $client->scrobbleTrack(
     artist: 'The Weeknd',
     track: 'Blinding Lights',
@@ -105,104 +110,83 @@ $artistInfo = $client->getArtistInfo(artist: 'Billie Eilish');
 $albumInfo = $client->getAlbumInfo(artist: 'Taylor Swift', album: 'Midnights');
 $trackInfo = $client->getTrackInfo(artist: 'The Weeknd', track: 'Blinding Lights');
 
-$similarArtists = $client->getArtistSimilar(artist: 'Olivia Rodrigo');
+$similarArtists = $client->getSimilarArtists(artist: 'Olivia Rodrigo');
 $topTracks = $client->getArtistTopTracks(artist: 'Dua Lipa', limit: 10);
 $topAlbums = $client->getArtistTopAlbums(artist: 'Ariana Grande');
 ```
 
+---
+
 ## ✨ Key Features
 
-- **Ultra-Lightweight** – Minimal Symfony integration with zero bloat for the ultra-lightweight Last.fm client
-- **Complete API Coverage** – All Last.fm API endpoints supported (Album, Artist, Auth, Chart, Geo, Library, Tag, Track, User)
-- **Direct API Calls** – `$client->getArtistInfo(artist: 'name')` maps to `/2.0/?method=artist.getinfo`, no abstractions
-- **Type Safe + IDE Support** – Full PHP 8.1+ types, PHPStan Level 8, method autocomplete  
-- **Symfony Native** – Seamless autowiring with Symfony 6.4, 7.x & 8.x
-- **Well Tested** – Comprehensive test coverage, Symfony coding standards
-- **Flexible Auth** – API Key for read operations, API Key + Secret + Session Key for user operations (scrobbling, etc.)
+- **Lightweight Integration** – Minimal footprint with zero overhead on top of `calliostro/lastfm-client`.
+- **Complete API Coverage** – All Last.fm API endpoints supported (Album, Artist, Chart, Geo, Library, Tag, Track, User).
+- **Direct API Calls** – `$client->getArtistInfo(artist: 'name')` maps directly to Last.fm API methods.
+- **Built-in Retry Resilience** – Automatic exponential backoff and retry handling for `429 Too Many Requests` and `503 Service Unavailable` responses.
+- **Type Safe & IDE Support** – PHP 8.1+ types, named parameters, and PHPStan Level 8 static analysis.
+- **Symfony Native** – Autowiring support for Symfony 6.4, 7.x, and 8.x.
+- **Flexible Authentication** – API Key for read operations, API Secret and Session Key for user operations and scrobbling.
+
+---
 
 ## 🎵 All Last.fm API Methods as Direct Calls
 
-- **Album Methods** – getAlbumInfo(), addAlbumTags(), getAlbumTags(), getAlbumTopTags(), removeAlbumTag(), searchAlbums()
-- **Artist Methods** – getArtistInfo(), getArtistCorrection(), getArtistSimilar(), getArtistTags(), getArtistTopAlbums(), getArtistTopTags(), getArtistTopTracks(), addArtistTags(), removeArtistTag(), searchArtists()
-- **Auth Methods** – getMobileSession(), getSession(), getToken()
-- **Chart Methods** – getTopArtists(), getTopTags(), getTopTracks()
-- **Geo Methods** – getTopArtists(), getTopTracks()
-- **Library Methods** – getArtists()
-- **Tag Methods** – getInfo(), getSimilar(), getTopAlbums(), getTopArtists(), getTopTracks(), getWeeklyChartList()
-- **Track Methods** – getTrackInfo(), getTrackCorrection(), getTrackSimilar(), getTrackTags(), getTrackTopTags(), addTrackTags(), loveTrack(), removeTrackTag(), scrobbleTrack(), unloveTrack(), updateNowPlaying(), searchTracks()
-- **User Methods** – getUserInfo(), getUserFriends(), getUserLovedTracks(), getUserPersonalTags(), getUserRecentTracks(), getUserTopAlbums(), getUserTopArtists(), getUserTopTags(), getUserTopTracks(), getUserWeeklyAlbumChart(), getUserWeeklyArtistChart(), getUserWeeklyChartList(), getUserWeeklyTrackChart()
+- **Album Methods** – `addAlbumTags()`, `getAlbumInfo()`, `getAlbumTags()`, `getAlbumTopTags()`, `removeAlbumTag()`, `searchAlbums()`
+- **Artist Methods** – `addArtistTags()`, `getArtistCorrection()`, `getArtistInfo()`, `getSimilarArtists()`, `getArtistTags()`, `getArtistTopAlbums()`, `getArtistTopTags()`, `getArtistTopTracks()`, `removeArtistTag()`, `searchArtists()`
+- **Chart Methods** – `getTopArtistsChart()`, `getTopTagsChart()`, `getTopTracksChart()`
+- **Geography Methods** – `getTopArtistsByCountry()`, `getTopTracksByCountry()`
+- **Library Methods** – `getLibraryArtists()`
+- **Tag Methods** – `getTagInfo()`, `getSimilarTags()`, `getTagTopAlbums()`, `getTagTopArtists()`, `getTopTags()`, `getTagTopTracks()`, `getTagWeeklyChartList()`
+- **Track Methods** – `addTrackTags()`, `getTrackCorrection()`, `getTrackInfo()`, `getSimilarTracks()`, `getTrackTags()`, `getTrackTopTags()`, `loveTrack()`, `removeTrackTag()`, `scrobbleTrack()`, `searchTracks()`, `unloveTrack()`, `updateNowPlaying()`
+- **User Methods** – `getUserArtistTracks()`, `getUserFriends()`, `getUserInfo()`, `getUserLovedTracks()`, `getUserPersonalTags()`, `getUserRecentTracks()`, `getUserTopAlbums()`, `getUserTopArtists()`, `getUserTopTags()`, `getUserTopTracks()`, `getUserWeeklyAlbumChart()`, `getUserWeeklyArtistChart()`, `getUserWeeklyChartList()`, `getUserWeeklyTrackChart()`
 
-*All Last.fm API endpoints are supported with clean documentation — see [Last.fm API Documentation](https://www.last.fm/api) for complete method reference*
+> [!NOTE]
+> Complete method documentation and endpoint parameters can be found in the [Last.fm API Documentation](https://www.last.fm/api).
+
+---
 
 ## 📋 Requirements
 
-- php ^8.1
-- symfony ^6.4 | ^7.0 | ^8.0
-- calliostro/lastfm-client ^2.0
+- **PHP** `^8.1` (tested on PHP 8.1–8.6)
+- **Symfony** `^6.4 || ^7.0 || ^8.0`
+- **calliostro/lastfm-client** `^2.1`
 
-## 🔧 Service Integration
+---
 
-```php
-<?php
-// src/Service/MusicService.php
+## ⚡ Resilience & Rate Limiting
 
-namespace App\Service;
+### Built-in Retries (Reactive)
 
-use Calliostro\LastFm\LastFmClient;
+Out of the box, `calliostro/lastfm-client` v2.1 automatically handles rate limit responses (`429 Too Many Requests`) and temporary service downtime (`503 Service Unavailable`). When triggered, the client respects the `Retry-After` header or uses exponential backoff before retrying the request.
 
-class MusicService
-{
-    public function __construct(
-        private readonly LastFmClient $client
-    ) {
-    }
+You can customize or disable this behavior in `config/packages/calliostro_lastfm.yaml`:
 
-    public function getArtistWithTopTracks(string $artist): array
-    {
-        $artistInfo = $this->client->getArtistInfo(artist: $artist);
-        $topTracks = $this->client->getArtistTopTracks(
-            artist: $artist,
-            limit: 10
-        );
-
-        return [
-            'artist' => $artistInfo,
-            'topTracks' => $topTracks['toptracks']['track'],
-        ];
-    }
-
-    public function scrobbleCurrentTrack(string $artist, string $track): void
-    {
-        // Requires API Key, API Secret AND Session Key
-        $this->client->scrobbleTrack(
-            artist: $artist,
-            track: $track,
-            timestamp: time()
-        );
-    }
-}
+```yaml
+calliostro_lastfm:
+    auto_retry: true   # default: true
+    max_retries: 3     # default: 3
 ```
 
-## ⚡ Rate Limiting (Optional)
+### Symfony Rate Limiter (Proactive, Optional)
 
-For high-volume applications, use the powerful [symfony/rate-limiter](https://symfony.com/doc/current/rate_limiter.html) component:
+For high-volume batch processing, background workers, or scraping tasks, use `symfony/rate-limiter` to throttle outgoing requests client-side before sending them:
 
 ```bash
 composer require symfony/rate-limiter
 ```
 
-### 1. Configure Rate Limiter
+#### 1. Configure the Rate Limiter
 
 ```yaml
 # config/packages/rate_limiter.yaml
 rate_limiter:
     lastfm_api:
         policy: 'sliding_window'
-        limit: 5  # Last.fm allows 5 requests per second per IP
+        limit: 5  # Last.fm allows up to 5 requests per second per IP
         interval: '1 second'
 ```
 
-### 2. Configure Bundle
+#### 2. Assign to the Bundle
 
 ```yaml
 # config/packages/calliostro_lastfm.yaml
@@ -212,34 +196,41 @@ calliostro_lastfm:
     rate_limiter: lastfm_api
 ```
 
-**Choose your rate limit based on your usage:**
+---
 
-- **Standard access:** Use 5/sec (as shown above) for all API operations
-- **High-volume applications:** Consider reducing to 3-4/sec for safety margin
+## 🧪 Development & Testing Guide
 
-The bundle uses a Guzzle middleware that automatically handles rate limiting by:
+See [DEVELOPMENT.md](DEVELOPMENT.md) for detailed setup instructions, test suite commands, static analysis, and contribution guidelines.
 
-- Intercepting outgoing requests before they're sent
-- Checking rate limit availability using Symfony's RateLimiter
-- Automatically waiting when limits are exceeded (using microsecond precision)
-- Retrying requests after the appropriate delay
-
-This seamless integration ensures your application never exceeds API limits without requiring any code changes. Higher rates may result in HTTP 429 responses if rate limiting is not configured.
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please see [DEVELOPMENT.md](DEVELOPMENT.md) for detailed setup instructions, testing guide, and development workflow.
+Contributions are welcome! Please ensure that all tests pass and coding standards are maintained:
+
+```bash
+composer cs-fix
+composer analyse
+composer test
+```
+
+---
 
 ## 📄 License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+---
 
-- [Last.fm](https://www.last.fm/) for providing the excellent music scrobbling and data API
-- [Symfony](https://symfony.com) for the robust framework and DI container
-- [calliostro/lastfm-client](https://github.com/calliostro/lastfm-client) for the modern client library
+## ⚖️ Disclaimer
+
+Last.fm is a registered trademark of CBS Interactive Inc. / Paramount Global. This project is an independent, unofficial open-source library and is not affiliated with, endorsed by, or sponsored by Last.fm or Paramount Global.
 
 ---
 
-> **⭐ Star this repo** if you find it useful! It helps others discover this lightweight solution.
+## 🙏 Acknowledgments
+
+- [Last.fm](https://www.last.fm/) for providing the database and API.
+- [Symfony](https://symfony.com) for the web framework and dependency injection container.
+- Underlying client: [`calliostro/lastfm-client`](https://github.com/calliostro/lastfm-client).
+- Sister Symfony bundles: [`calliostro/spotify-web-api-bundle`](https://github.com/calliostro/spotify-web-api-bundle), [`calliostro/discogs-bundle`](https://github.com/calliostro/discogs-bundle), and [`calliostro/musicbrainz-bundle`](https://github.com/calliostro/musicbrainz-bundle).

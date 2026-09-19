@@ -24,6 +24,8 @@ final class ConfigurationTest extends TestCase
         $this->assertNull($config['session_key']);
         $this->assertNull($config['user_agent']);
         $this->assertNull($config['rate_limiter']);
+        $this->assertTrue($config['auto_retry']);
+        $this->assertSame(3, $config['max_retries']);
     }
 
     public function testConfigurationWithUserAgent(): void
@@ -85,6 +87,21 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals('my_api_key_123', $config['api_key']);
     }
 
+    public function testConfigurationWithRetryOptions(): void
+    {
+        $configs = [
+            [
+                'auto_retry' => false,
+                'max_retries' => 5,
+            ],
+        ];
+
+        $config = $this->processor->processConfiguration($this->configuration, $configs);
+
+        $this->assertFalse($config['auto_retry']);
+        $this->assertSame(5, $config['max_retries']);
+    }
+
     public function testRateLimiterBasicConfiguration(): void
     {
         $configs = [
@@ -108,6 +125,8 @@ final class ConfigurationTest extends TestCase
                 'api_secret' => 'valid_api_secret_12345',
                 'session_key' => 'valid_session_key_12345',
                 'rate_limiter' => 'my_rate_limiter',
+                'auto_retry' => true,
+                'max_retries' => 2,
             ],
         ];
 
@@ -118,6 +137,8 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals('valid_api_secret_12345', $config['api_secret']);
         $this->assertEquals('valid_session_key_12345', $config['session_key']);
         $this->assertEquals('my_rate_limiter', $config['rate_limiter']);
+        $this->assertTrue($config['auto_retry']);
+        $this->assertSame(2, $config['max_retries']);
     }
 
     public function testMultipleConfigurationMerging(): void
@@ -127,11 +148,13 @@ final class ConfigurationTest extends TestCase
                 'user_agent' => 'FirstApp/1.0',
                 'api_key' => 'first_key',
                 'session_key' => 'first_session',
+                'max_retries' => 1,
             ],
             [
                 'user_agent' => 'SecondApp/2.0',
                 'api_secret' => 'second_secret',
                 'rate_limiter' => 'my_rate_limiter',
+                'max_retries' => 4,
             ],
         ];
 
@@ -143,6 +166,7 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals('second_secret', $config['api_secret']); // From second config
         $this->assertEquals('first_session', $config['session_key']); // From first config
         $this->assertEquals('my_rate_limiter', $config['rate_limiter']); // From second config
+        $this->assertSame(4, $config['max_retries']);
     }
 
     public function testRateLimiterConfiguration(): void
