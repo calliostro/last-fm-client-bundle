@@ -63,6 +63,14 @@ final class CalliostroLastfmExtension extends Extension
             $options['headers'] = ['User-Agent' => $config['user_agent']];
         }
 
+        if (isset($config['auto_retry'])) {
+            $options['auto_retry'] = $config['auto_retry'];
+        }
+
+        if (isset($config['max_retries'])) {
+            $options['max_retries'] = $config['max_retries'];
+        }
+
         // Configure rate limiting if requested
         if (!empty($config['rate_limiter'])) {
             $this->configureSymfonyRateLimiter($container, $config['rate_limiter'], $options);
@@ -107,7 +115,7 @@ final class CalliostroLastfmExtension extends Extension
      */
     private function loadServices(ContainerBuilder $container): void
     {
-        $fileLocator = new FileLocator(__DIR__.'/../Resources/config');
+        $fileLocator = new FileLocator(__DIR__ . '/../Resources/config');
         $loader = new PhpFileLoader($container, $fileLocator);
         $loader->load('services.php');
     }

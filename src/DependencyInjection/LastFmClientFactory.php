@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Calliostro\LastfmBundle\DependencyInjection;
 
 use Calliostro\LastFm\LastFmClient;
+use Calliostro\LastFm\LastFmClientFactory as BaseLastFmClientFactory;
 
 /**
  * Factory service for creating LastFmClient instances with runtime validation.
@@ -40,11 +41,11 @@ final class LastFmClientFactory
 
         // Check for partial credentials and provide helpful error
         if (!empty($apiSecret)) {
-            throw new \InvalidArgumentException('Incomplete API credentials provided. API key is required when API secret is provided. '.$this->getSetupInstructions());
+            throw new \InvalidArgumentException('Incomplete API credentials provided. API key is required when API secret is provided. ' . $this->getSetupInstructions());
         }
 
         // Create anonymous client (rate-limited) - this is allowed
-        return new LastFmClient($options);
+        return BaseLastFmClientFactory::create($options);
     }
 
     /**
@@ -62,10 +63,11 @@ final class LastFmClientFactory
             throw new \InvalidArgumentException(\sprintf('API secret must be at least 10 characters long, got %d characters. %s', \strlen($apiSecret), $this->getSetupInstructions()));
         }
 
-        $client = new LastFmClient($options);
-        $client->setApiCredentials($apiKey, $apiSecret, $sessionKey);
+        if (!empty($sessionKey)) {
+            return BaseLastFmClientFactory::createWithSession($apiKey, $apiSecret, $sessionKey, $options);
+        }
 
-        return $client;
+        return BaseLastFmClientFactory::createWithApiKey($apiKey, $apiSecret, $options);
     }
 
     /**
@@ -79,7 +81,7 @@ final class LastFmClientFactory
             throw new \InvalidArgumentException(\sprintf('API key must be at least 10 characters long, got %d characters. %s', \strlen($apiKey), $this->getSetupInstructions()));
         }
 
-        $client = new LastFmClient($options);
+        $client = BaseLastFmClientFactory::create($options);
         $client->setApiCredentials($apiKey);
 
         return $client;
@@ -90,23 +92,23 @@ final class LastFmClientFactory
      */
     private function getSetupInstructions(): string
     {
-        return "\n\nTo configure Last.fm API credentials:\n".
-               "1. API Key and Secret (recommended for full functionality):\n".
-               "   - Get your credentials from: https://www.last.fm/api/account/create\n".
-               "   - Set environment variables:\n".
-               "     LASTFM_API_KEY=your_key_here\n".
-               "     LASTFM_API_SECRET=your_secret_here\n".
-               "   - Configure in config/packages/calliostro_lastfm.yaml:\n".
-               "     calliostro_lastfm:\n".
-               "       api_key: '%env(LASTFM_API_KEY)%'\n".
-               "       api_secret: '%env(LASTFM_API_SECRET)%'\n\n".
-               "2. API Key only (read-only operations):\n".
-               "   - Set environment variable:\n".
-               "     LASTFM_API_KEY=your_key_here\n".
-               "   - Configure in config/packages/calliostro_lastfm.yaml:\n".
-               "     calliostro_lastfm:\n".
-               "       api_key: '%env(LASTFM_API_KEY)%'\n\n".
-               "3. Anonymous access (very limited functionality):\n".
+        return "\n\nTo configure Last.fm API credentials:\n" .
+               "1. API Key and Secret (recommended for full functionality):\n" .
+               "   - Get your credentials from: https://www.last.fm/api/account/create\n" .
+               "   - Set environment variables:\n" .
+               "     LASTFM_API_KEY=your_key_here\n" .
+               "     LASTFM_API_SECRET=your_secret_here\n" .
+               "   - Configure in config/packages/calliostro_lastfm.yaml:\n" .
+               "     calliostro_lastfm:\n" .
+               "       api_key: '%env(LASTFM_API_KEY)%'\n" .
+               "       api_secret: '%env(LASTFM_API_SECRET)%'\n\n" .
+               "2. API Key only (read-only operations):\n" .
+               "   - Set environment variable:\n" .
+               "     LASTFM_API_KEY=your_key_here\n" .
+               "   - Configure in config/packages/calliostro_lastfm.yaml:\n" .
+               "     calliostro_lastfm:\n" .
+               "       api_key: '%env(LASTFM_API_KEY)%'\n\n" .
+               "3. Anonymous access (very limited functionality):\n" .
                "   - No configuration needed, but only basic public endpoints available\n";
     }
 }
